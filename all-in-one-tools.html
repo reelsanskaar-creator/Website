@@ -211,41 +211,7 @@
     </div>
 
     <div class="tools-wrapper">
-        <!-- Tool 1: Text Statistics -->
-        <div class="tool-card">
-            <h3>📝 શબ્દ અને અક્ષર ગણતરી (Word Counter)</h3>
-            <textarea id="text-input" rows="3" placeholder="અહીં લખાણ લખો..." oninput="analyzeText()"></textarea>
-            <div class="output-box" id="text-stats">અક્ષરો: 0 | શબ્દો: 0</div>
-        </div>
-
-        <!-- Tool 2: Password Generator -->
-        <div class="tool-card">
-            <h3>🔐 મજબૂત પાસવર્ડ જનરેટર</h3>
-            <button onclick="generatePassword()">નવો પાસવર્ડ બનાવો</button>
-            <div class="output-box" id="password-output">પાસવર્ડ અહીં દેખાશે</div>
-        </div>
-
-        <!-- Tool 3: Case Converter -->
-        <div class="tool-card">
-            <h3>🔠 કેસ કન્વર્ટર (Uppercase/Lowercase)</h3>
-            <input type="text" id="case-input" placeholder="અહીં ટેક્સ્ટ લખો...">
-            <button onclick="convertToUpperCase()">CAPITAL</button>
-            <button onclick="convertToLowerCase()" style="background-color: #6366f1;">small</button>
-            <div class="output-box" id="case-output">પરિણામ...</div>
-        </div>
-
-        <!-- Tool 4: Simple Calculator -->
-        <div class="tool-card">
-            <h3>🔢 ઝડપી ગણતરી (Quick Calc)</h3>
-            <input type="text" id="calc-input" placeholder="દા.ત. 50 + 25 * 2">
-            <button onclick="calculateResult()">ગણતરી કરો</button>
-            <div class="output-box" id="calc-output">પરિણામ: 0</div>
-        </div>
-    </div>
-
-    <div class="arrow-container" id="arrow-container"></div>
-
-    <script>
+        
         // રીપોઝીટરીની ફાઇલોની યાદી
         const pages = [
             { name: "Home (Index)", file: "index.html" },
