@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Ludo Royal</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{--red:#e03030;--blue:#2979d4;--green:#1e9e3e;--yellow:#e8c800;--bg1:#1a2a5e;--bg2:#0f1a3d;--gold:#f5c518}
+body{font-family:'Nunito',sans-serif;background:linear-gradient(160deg,var(--bg1),var(--bg2));min-height:100vh;overflow-x:hidden;color:#fff}
+.screen{display:none;min-height:100vh;flex-direction:column;align-items:center;justify-content:center;padding:16px}
+.screen.active{display:flex}
+
+/* HOME */
+#home{background:linear-gradient(160deg,#1a2a6e,#0d1a4a);position:relative;overflow:hidden}
+#home::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(91,163,220,0.25),transparent 65%)}
+.home-logo{font-family:'Fredoka One',cursive;font-size:clamp(44px,12vw,80px);color:var(--gold);text-shadow:0 4px 24px rgba(245,197,24,0.4);letter-spacing:3px;margin-bottom:4px;position:relative}
+.home-sub{font-size:13px;letter-spacing:5px;color:rgba(255,255,255,0.45);text-transform:uppercase;margin-bottom:40px}
+.home-btns{display:flex;flex-direction:column;gap:14px;width:100%;max-width:340px}
+.hbtn{display:flex;align-items:center;gap:16px;padding:18px 24px;border-radius:18px;border:none;cursor:pointer;font-family:'Nunito',sans-serif;font-size:17px;font-weight:800;color:#fff;transition:all .25s;position:relative}
+.hbtn::after{content:'›';position:absolute;right:20px;font-size:22px;opacity:0.6}
+.hbtn:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,0.4)}
+.hbtn.online{background:linear-gradient(135deg,#2979d4,#1a5aaa)}
+.hbtn.computer{background:linear-gradient(135deg,#3aa86e,#1e7a4a)}
+.hbtn.local{background:linear-gradient(135deg,#e8a000,#c47800)}
+.hbtn.lb{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15)}
+.hbtn-icon{font-size:30px;flex-shrink:0}
+.hbtn-text{text-align:left}
+.hbtn-title{display:block;font-size:17px;font-weight:800}
+.hbtn-desc{display:block;font-size:12px;opacity:0.65;font-weight:600}
+.coins-bar{position:absolute;top:16px;right:16px;background:rgba(0,0,0,0.35);border:1px solid rgba(255,215,0,0.3);border-radius:30px;padding:6px 14px;font-size:14px;font-weight:700;color:var(--gold)}
+
+/* MODE SELECT */
+#mode-select{background:linear-gradient(160deg,#1a2a6e,#0d1a4a);gap:24px}
+.mode-title{font-family:'Fredoka One',cursive;font-size:clamp(26px,7vw,42px);color:var(--gold);text-align:center}
+.mode-cards{display:flex;flex-direction:column;gap:16px;width:100%;max-width:360px}
+.mcard{border-radius:20px;padding:24px 20px;display:flex;flex-direction:column;align-items:center;gap:10px;cursor:pointer;transition:all .25s;border:3px solid transparent}
+.mcard:hover{transform:translateY(-4px);box-shadow:0 16px 48px rgba(0,0,0,0.5)}
+.mcard.computer-card{background:linear-gradient(135deg,#4ab0e8,#2577c0)}
+.mcard.local-card{background:linear-gradient(135deg,#f0b030,#c07800)}
+.mcard-emoji{font-size:64px}
+.mcard-label{font-family:'Fredoka One',cursive;font-size:22px;color:#fff}
+.play-tagline{background:linear-gradient(135deg,#f5c518,#e8900a);border-radius:16px;padding:14px 28px;font-family:'Fredoka One',cursive;font-size:clamp(18px,5vw,26px);color:#fff;text-align:center;margin-top:8px;max-width:360px}
+
+/* PLAYER SELECT */
+#player-select{background:linear-gradient(160deg,#1a2a6e,#0d1a4a);gap:20px}
+.psel-box{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);border-radius:20px;padding:20px;width:100%;max-width:380px}
+.psel-label{font-size:13px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:12px;font-weight:700}
+.player-count-row{display:flex;gap:10px}
+.pcount-btn{flex:1;padding:14px 8px;background:linear-gradient(135deg,#4ab0e8,#2577c0);border:3px solid transparent;border-radius:14px;font-family:'Fredoka One',cursive;font-size:18px;color:#fff;cursor:pointer;transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:4px}
+.pcount-btn.selected{border-color:var(--gold);box-shadow:0 0 20px rgba(245,197,24,0.4)}
+.pcount-icon{font-size:22px}
+.color-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.color-btn{width:60px;height:60px;border-radius:50%;border:4px solid transparent;cursor:pointer;transition:all .2s;position:relative;display:flex;align-items:center;justify-content:center;font-size:22px}
+.color-btn.selected{border-color:var(--gold);transform:scale(1.15);box-shadow:0 0 18px rgba(245,197,24,0.5)}
+.cb-blue{background:radial-gradient(circle at 35% 35%,#6ab0ff,var(--blue))}
+.cb-red{background:radial-gradient(circle at 35% 35%,#ff8080,var(--red))}
+.cb-green{background:radial-gradient(circle at 35% 35%,#70e88a,var(--green))}
+.cb-yellow{background:radial-gradient(circle at 35% 35%,#ffe878,#c8a000)}
+.start-big-btn{background:linear-gradient(135deg,#f5c518,#e8900a);border:none;border-radius:18px;padding:18px 40px;font-family:'Fredoka One',cursive;font-size:22px;color:#fff;cursor:pointer;width:100%;max-width:380px;transition:all .25s;box-shadow:0 8px 30px rgba(245,197,24,0.3)}
+.start-big-btn:hover{transform:translateY(-3px);box-shadow:0 14px 40px rgba(245,197,24,0.4)}
+.back-link{color:rgba(255,255,255,0.4);font-size:14px;cursor:pointer;margin-top:4px;font-weight:600}
+.back-link:hover{color:#fff}
+
+/* ONLINE LOBBY */
+#online-lobby{background:linear-gradient(160deg,#1a2a6e,#0d1a4a);gap:14px}
+.lobby-header{font-family:'Fredoka One',cursive;font-size:28px;color:var(--gold)}
+.room-code-box{background:rgba(255,215,0,0.1);border:2px solid rgba(255,215,0,0.4);border-radius:16px;padding:12px 24px;text-align:center;font-family:'Fredoka One',cursive;font-size:26px;letter-spacing:6px;color:var(--gold)}
+.online-players-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;max-width:400px}
+.op-card{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);border-radius:14px;padding:12px;display:flex;align-items:center;gap:10px}
+.op-avatar{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.op-info{flex:1;min-width:0}
+.op-name{font-size:13px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.op-level{font-size:11px;color:rgba(255,255,255,0.5)}
+.op-coins{font-size:11px;color:var(--gold);font-weight:700}
+.invite-btn{background:linear-gradient(135deg,#2979d4,#1a5aaa);border:none;border-radius:8px;padding:5px 10px;color:#fff;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap}
+.invite-btn:disabled{opacity:0.5}
+.online-info-bar{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:10px 16px;font-size:12px;color:rgba(255,255,255,0.6);max-width:400px;width:100%;text-align:center;line-height:1.6}
+
+/* GAME */
+#game{padding:8px;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(160deg,var(--bg1),var(--bg2))}
+.game-container{display:grid;grid-template-areas:"tl board tr" "bl board br";grid-template-columns:auto 1fr auto;grid-template-rows:1fr 1fr;gap:8px;width:100%;max-width:680px;align-items:center;justify-items:center}
+.corner-card{width:130px;display:flex;flex-direction:column;gap:4px}
+.cc-top{display:flex;align-items:center;gap:6px;background:rgba(0,0,0,0.35);border-radius:12px;padding:6px 8px;border:1px solid transparent;transition:all .3s}
+.cc-flag{font-size:15px}
+.cc-name{font-size:11px;font-weight:800;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cc-avatar{width:46px;height:50px;border-radius:8px;background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;font-size:24px;border:2px solid rgba(255,255,255,0.15)}
+.cc-avatar-blank{width:46px;height:50px;border-radius:8px;background:rgba(255,255,255,0.05);border:2px solid rgba(255,255,255,0.08)}
+.cc-stars{display:flex;gap:1px;margin-top:2px}
+.cc-star{font-size:8px;color:#333}
+.cc-star.lit{color:var(--gold)}
+.cc-level{font-size:10px;color:rgba(255,255,255,0.45);font-weight:600}
+.cc-coins-row{font-size:11px;color:var(--gold);font-weight:700}
+.cc-bar{height:3px;border-radius:2px;background:rgba(255,255,255,0.1);margin-top:3px;overflow:hidden}
+.cc-bar-fill{height:100%;border-radius:2px;transition:width .5s}
+.corner-card.red-side .cc-bar-fill{background:var(--red)}
+.corner-card.blue-side .cc-bar-fill{background:var(--blue)}
+.corner-card.green-side .cc-bar-fill{background:var(--green)}
+.corner-card.yellow-side .cc-bar-fill{background:var(--yellow)}
+.corner-card.active-player .cc-top{border-color:var(--gold);box-shadow:0 0 14px rgba(255,215,0,0.45)}
+
+/* Board */
+.board-area{grid-area:board;width:100%;max-width:360px;aspect-ratio:1}
+#ludo-board{display:grid;grid-template-columns:repeat(15,1fr);grid-template-rows:repeat(15,1fr);width:100%;height:100%;border-radius:12px;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,0.6);border:3px solid rgba(255,255,255,0.15)}
+.cell{border:0.5px solid rgba(0,0,0,0.12);position:relative;display:flex;align-items:center;justify-content:center}
+.bg-red{background:#e03030}.bg-blue{background:#2979d4}.bg-green{background:#1e9e3e}.bg-yellow{background:#e8c800}
+.bg-white{background:#f5f5f5}
+.bg-red-path{background:#f28080}.bg-blue-path{background:#80aaf0}.bg-green-path{background:#80d898}.bg-yellow-path{background:#f0e060}
+.bg-center{background:conic-gradient(var(--red) 0 25%,var(--blue) 25% 50%,var(--green) 50% 75%,var(--yellow) 75% 100%)}
+.cell.safe-cell::after{content:'★';position:absolute;font-size:10px;color:rgba(80,80,80,0.45);pointer-events:none;z-index:1}
+
+/* Pawns */
+.pawn{position:absolute;border-radius:50%;border:2px solid rgba(255,255,255,0.65);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:900;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,0.7);cursor:pointer;transition:transform .2s;z-index:5;box-shadow:0 2px 8px rgba(0,0,0,0.5),inset 0 1px 3px rgba(255,255,255,0.4)}
+.pawn:hover{transform:scale(1.22)!important;z-index:10}
+.pawn.pawn-red{background:radial-gradient(circle at 35% 30%,#ff9090,var(--red),#901010)}
+.pawn.pawn-blue{background:radial-gradient(circle at 35% 30%,#90b8ff,var(--blue),#103090)}
+.pawn.pawn-green{background:radial-gradient(circle at 35% 30%,#90e8a8,var(--green),#105a20)}
+.pawn.pawn-yellow{background:radial-gradient(circle at 35% 30%,#fff090,#d4a800,#806000)}
+.pawn.highlight{animation:glowPulse .7s ease-in-out infinite;border-color:var(--gold);box-shadow:0 0 16px rgba(255,215,0,0.8)}
+@keyframes glowPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.22)}}
+.pawn.home-pawn{width:38%;height:38%}
+
+/* Controls */
+.game-controls{display:flex;align-items:center;gap:12px;margin-top:8px;width:100%;max-width:360px}
+.dice-wrap{background:rgba(0,0,0,0.3);border-radius:14px;padding:10px 14px;display:flex;align-items:center;gap:10px;border:1px solid rgba(255,255,255,0.1);flex:1}
+.dice-face{font-size:44px;cursor:pointer;user-select:none;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.4))}
+.dice-face.spinning{animation:spinDice .4s ease}
+@keyframes spinDice{0%{transform:rotate(0)scale(1)}30%{transform:rotate(200deg)scale(1.3)}70%{transform:rotate(320deg)scale(0.9)}100%{transform:rotate(360deg)scale(1)}}
+.dice-info{flex:1}
+.dice-val{font-family:'Fredoka One',cursive;font-size:28px;color:var(--gold);line-height:1}
+.dice-hint{font-size:11px;color:rgba(255,255,255,0.4)}
+.roll-btn{background:linear-gradient(135deg,#f5c518,#d4900a);border:none;border-radius:12px;padding:12px 20px;font-family:'Fredoka One',cursive;font-size:17px;color:#fff;cursor:pointer;transition:all .25s;box-shadow:0 4px 18px rgba(245,197,24,0.3)}
+.roll-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 24px rgba(245,197,24,0.4)}
+.roll-btn:disabled{opacity:0.35;cursor:default}
+.turn-text{font-size:13px;font-weight:800;color:rgba(255,255,255,0.75);text-align:center;margin-top:6px}
+
+/* TIMER */
+.timer-wrap{width:100%;max-width:360px;margin-top:6px;display:none}
+.timer-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px}
+.timer-who{font-size:12px;font-weight:700;color:rgba(255,255,255,0.6)}
+.timer-secs{font-family:'Fredoka One',cursive;font-size:18px;color:#22c55e;min-width:36px;text-align:right;transition:color .3s}
+.timer-secs.danger{color:#ef4444;animation:tshake .25s ease}
+@keyframes tshake{0%,100%{transform:translateX(0)}25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}
+.timer-track{height:8px;background:rgba(255,255,255,0.1);border-radius:99px;overflow:hidden}
+.timer-fill{height:100%;border-radius:99px;transition:width 1s linear,background .4s;background:linear-gradient(90deg,#22c55e,#f5c518);width:100%}
+.timer-fill.danger{background:linear-gradient(90deg,#ef4444,#f97316)}
+
+/* LIVE POPUP */
+.live-popup{position:fixed;top:54px;left:50%;transform:translateX(-50%) translateY(0);background:rgba(5,12,36,0.97);border:2px solid rgba(255,255,255,0.14);border-radius:18px;padding:10px 18px 10px 14px;z-index:400;display:flex;align-items:center;gap:12px;pointer-events:none;transition:opacity .35s,transform .35s;box-shadow:0 8px 32px rgba(0,0,0,0.65);backdrop-filter:blur(12px);min-width:230px;max-width:90vw}
+.live-popup.hide{opacity:0;transform:translateX(-50%) translateY(-10px)}
+.lp-icon{font-size:28px;flex-shrink:0}
+.lp-body{flex:1;min-width:0}
+.lp-player{font-size:11px;color:rgba(255,255,255,0.5);font-weight:700;text-transform:uppercase;letter-spacing:1px}
+.lp-action{font-size:14px;font-weight:800;color:#fff;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lp-dice{font-family:'Fredoka One',cursive;font-size:24px;flex-shrink:0}
+
+/* Log */
+.game-log{background:rgba(0,0,0,0.25);border-radius:10px;padding:8px 12px;max-height:68px;overflow-y:auto;width:100%;max-width:360px;margin-top:6px}
+.log-line{font-size:11px;color:rgba(255,255,255,0.55);padding:2px 0;border-bottom:1px solid rgba(255,255,255,0.04)}
+.log-line:last-child{border:none}
+.menu-tiny{position:fixed;top:10px;left:10px;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.15);border-radius:10px;padding:6px 14px;font-size:13px;color:rgba(255,255,255,0.6);cursor:pointer;font-weight:700;z-index:200}
+.menu-tiny:hover{color:#fff}
+
+/* LEADERBOARD */
+#leaderboard{background:linear-gradient(160deg,#1a2a6e,#0d1a4a);gap:16px}
+.lb-title{font-family:'Fredoka One',cursive;font-size:32px;color:var(--gold)}
+.lb-list{width:100%;max-width:420px;display:flex;flex-direction:column;gap:8px}
+.lb-row{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,0.06);border-radius:14px;padding:12px 16px;border:1px solid rgba(255,255,255,0.08)}
+.lb-medal{font-size:22px;width:30px;text-align:center}
+.lb-ava{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:18px}
+.lb-name{flex:1;font-weight:800;font-size:14px}
+.lb-games{font-size:12px;color:rgba(255,255,255,0.4)}
+.lb-pts{font-family:'Fredoka One',cursive;font-size:20px;color:var(--gold)}
+
+/* WIN */
+#win-screen{background:linear-gradient(160deg,#1a2a6e,#0d1a4a);text-align:center;gap:16px}
+.win-trophy{font-size:80px;animation:trophyB 1.5s ease-in-out infinite}
+@keyframes trophyB{0%,100%{transform:translateY(0)rotate(-5deg)}50%{transform:translateY(-16px)rotate(5deg)}}
+.win-name{font-family:'Fredoka One',cursive;font-size:clamp(32px,8vw,60px);color:var(--gold);text-shadow:0 0 30px rgba(255,215,0,0.5)}
+.win-pts{font-family:'Fredoka One',cursive;font-size:52px;color:#fff}
+.win-ptslabel{font-size:12px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.4)}
+.confetti-c{position:fixed;inset:0;pointer-events:none;z-index:200}
+.cp{position:absolute;width:8px;height:14px;border-radius:3px;animation:cfFall linear forwards}
+@keyframes cfFall{0%{opacity:1;transform:translateY(-10px)rotate(0)}100%{opacity:0;transform:translateY(105vh)rotate(700deg)}}
+
+/* TOAST */
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:rgba(10,20,50,0.97);border:1px solid rgba(255,255,255,0.15);border-radius:14px;padding:10px 22px;font-size:14px;font-weight:700;z-index:500;transition:opacity .3s;pointer-events:none;backdrop-filter:blur(10px);white-space:nowrap}
+.toast.hide{opacity:0}
+
+@media(max-width:520px){.game-container{grid-template-columns:98px 1fr 98px}.corner-card{width:98px}}
+@media(max-width:400px){.game-container{grid-template-columns:84px 1fr 84px}.corner-card{width:84px}}
+</style>
+</head>
+<body>
+
+<!-- HOME -->
+<div id="home" class="screen active">
+  <div class="coins-bar">🪙 <span id="total-coins">4,670</span></div>
+  <div class="home-logo">🎲 LUDO</div>
+  <div class="home-sub">Royal Edition</div>
+  <div class="home-btns">
+    <button class="hbtn online" onclick="showOnlineLobby()">
+      <span class="hbtn-icon">🌐</span>
+      <span class="hbtn-text"><span class="hbtn-title">Play Online</span><span class="hbtn-desc">Real players • Live moves • Timer</span></span>
+    </button>
+    <button class="hbtn computer" onclick="showModeSelect('computer')">
+      <span class="hbtn-icon">🤖</span>
+      <span class="hbtn-text"><span class="hbtn-title">vs Computer</span><span class="hbtn-desc">Play against smart AI bots</span></span>
+    </button>
+    <button class="hbtn local" onclick="showModeSelect('local')">
+      <span class="hbtn-icon">👨‍👩‍👧‍👦</span>
+      <span class="hbtn-text"><span class="hbtn-title">Local Play</span><span class="hbtn-desc">Pass & play on one device</span></span>
+    </button>
+    <button class="hbtn lb" onclick="showLeaderboard()">
+      <span class="hbtn-icon">🏆</span>
+      <span class="hbtn-text"><span class="hbtn-title">Leaderboard</span><span class="hbtn-desc">Top players ranking</span></span>
+    </button>
+  </div>
+</div>
+
+<!-- MODE SELECT -->
+<div id="mode-select" class="screen">
+  <div class="mode-title">Choose Mode</div>
+  <div class="mode-cards" id="mode-cards-inner"></div>
+  <div class="play-tagline" id="play-tagline">Play With Friends Or Computer</div>
+  <span class="back-link" onclick="goHome()">← Back</span>
+</div>
+
+<!-- PLAYER SELECT -->
+<div id="player-select" class="screen">
+  <div style="font-family:'Fredoka One',cursive;font-size:28px;color:var(--gold);margin-bottom:4px">Setup Game</div>
+  <div class="psel-box">
+    <div class="psel-label">Select Players</div>
+    <div class="player-count-row">
+      <button class="pcount-btn" data-count="2" onclick="selectCount(2)"><span class="pcount-icon">👥</span>2P</button>
+      <button class="pcount-btn" data-count="3" onclick="selectCount(3)"><span class="pcount-icon">👨‍👩‍👦</span>3P</button>
+      <button class="pcount-btn selected" data-count="4" onclick="selectCount(4)"><span class="pcount-icon">👨‍👩‍👧‍👦</span>4P</button>
+    </div>
+  </div>
+  <div class="psel-box">
+    <div class="psel-label">Choose Your Color</div>
+    <div class="color-row">
+      <div class="color-btn cb-blue selected" data-color="blue" onclick="selectColor('blue')">✓</div>
+      <div class="color-btn cb-red" data-color="red" onclick="selectColor('red')"></div>
+      <div class="color-btn cb-green" data-color="green" onclick="selectColor('green')"></div>
+      <div class="color-btn cb-yellow" data-color="yellow" onclick="selectColor('yellow')"></div>
+    </div>
+  </div>
+  <div class="psel-box">
+    <div class="psel-label">Your Name</div>
+    <input id="player-name" value="You" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:10px;padding:10px 14px;color:#fff;font-family:'Nunito',sans-serif;font-size:15px;font-weight:700;width:100%;outline:none">
+  </div>
+  <button class="start-big-btn" onclick="startSelectedGame()">▶ START GAME</button>
+  <span class="back-link" onclick="goHome()">← Back</span>
+</div>
+
+<!-- ONLINE LOBBY -->
+<div id="online-lobby" class="screen">
+  <div class="lobby-header">🌐 Online Lobby</div>
+  <div class="room-code-box" id="room-code">------</div>
+  <div style="font-size:12px;color:rgba(255,255,255,0.4);letter-spacing:2px;margin-top:-4px">SHARE ROOM CODE</div>
+  <div class="online-info-bar">
+    ⏱️ <b>15 second timer</b> per turn &nbsp;|&nbsp; 💥 Live move alerts &nbsp;|&nbsp; 🏆 Points system<br>
+    Dusre players ki har move aapko turant dikhegi!
+  </div>
+  <div class="online-players-grid" id="online-grid"></div>
+  <button class="start-big-btn" style="max-width:400px" onclick="startOnlineGame()">▶ START NOW</button>
+  <span class="back-link" onclick="goHome()">← Back</span>
+</div>
+
+<!-- GAME -->
+<div id="game" class="screen">
+  <button class="menu-tiny" onclick="goHome()">☰ Menu</button>
+  <div class="game-container">
+    <div class="corner-card red-side" id="card-red" style="grid-area:tl"></div>
+    <div class="board-area"><div id="ludo-board"></div></div>
+    <div class="corner-card blue-side" id="card-blue" style="grid-area:tr"></div>
+    <div class="corner-card yellow-side" id="card-yellow" style="grid-area:bl"></div>
+    <div class="corner-card green-side" id="card-green" style="grid-area:br"></div>
+  </div>
+  <div class="game-controls">
+    <div class="dice-wrap">
+      <div class="dice-face" id="dice-face" onclick="rollDice()">🎲</div>
+      <div class="dice-info">
+        <div class="dice-val" id="dice-val">-</div>
+        <div class="dice-hint" id="dice-hint">Tap to roll!</div>
+      </div>
+    </div>
+    <button class="roll-btn" id="roll-btn" onclick="rollDice()">ROLL!</button>
+  </div>
+  <div class="turn-text" id="turn-text">Press ROLL to start!</div>
+  <div class="timer-wrap" id="timer-wrap">
+    <div class="timer-header">
+      <span class="timer-who" id="timer-who">Your turn</span>
+      <span class="timer-secs" id="timer-secs">15s</span>
+    </div>
+    <div class="timer-track"><div class="timer-fill" id="timer-fill"></div></div>
+  </div>
+  <div class="game-log" id="game-log"></div>
+</div>
+
+<!-- LIVE POPUP (shows other players' moves in online mode) -->
+<div class="live-popup hide" id="live-popup">
+  <div class="lp-icon" id="lp-icon">🔵</div>
+  <div class="lp-body">
+    <div class="lp-player" id="lp-player">Player</div>
+    <div class="lp-action" id="lp-action">Rolled 4</div>
+  </div>
+  <div class="lp-dice" id="lp-dice">⚄</div>
+</div>
+
+<!-- LEADERBOARD -->
+<div id="leaderboard" class="screen">
+  <div class="lb-title">🏆 Hall of Fame</div>
+  <div class="lb-list" id="lb-list"></div>
+  <button class="start-big-btn" style="max-width:240px" onclick="goHome()">← Back</button>
+</div>
+
+<!-- WIN -->
+<div id="win-screen" class="screen">
+  <div class="confetti-c" id="confetti-c"></div>
+  <div class="win-trophy">🏆</div>
+  <div class="win-name" id="win-name">WINNER!</div>
+  <div style="font-size:16px;color:rgba(255,255,255,0.6);margin-top:-4px" id="win-sub"></div>
+  <div class="win-pts" id="win-pts">+0</div>
+  <div class="win-ptslabel">COINS EARNED</div>
+  <button class="start-big-btn" style="max-width:260px;margin-top:12px" onclick="goHome()">🎲 Play Again</button>
+</div>
+
+<div class="toast hide" id="toast"></div>
+
+<script>
+// ============================================================
+// CONSTANTS
+// ============================================================
+const COLORS=['red','blue','green','yellow'];
+const AVATARS={red:'🔴',blue:'🔵',green:'🟢',yellow:'🟡'};
+const FLAGS=['🇮🇳','🇦🇱','🇳🇬','🌍'];
+const BOT_NAMES=['Vikash Jaiswal','Uendi','Kabirul Mondal','Guest9539'];
+const DICE_FACES=['⚀','⚁','⚂','⚃','⚄','⚅'];
+const TURN_SECS=15;
+
+// ============================================================
+// STATE
+// ============================================================
+let gameMode='local', myColor='blue';
+let players=[], currentIdx=0, diceVal=0, movable=[];
+let leaderboard=JSON.parse(localStorage.getItem('ludoLB4')||'[]');
+let timerInterval=null, timerLeft=TURN_SECS;
+let livePopupTimer=null;
+let rollAnimTimer=null;
+let gameActive=false;
+
+// ============================================================
+// BOARD DATA
+// ============================================================
+const TRACK52=[
+  [6,1],[6,2],[6,3],[6,4],[6,5],
+  [5,6],[4,6],[3,6],[2,6],[1,6],[0,6],
+  [0,7],
+  [0,8],[1,8],[2,8],[3,8],[4,8],[5,8],
+  [6,9],[6,10],[6,11],[6,12],[6,13],[6,14],
+  [7,14],
+  [8,14],[8,13],[8,12],[8,11],[8,10],[8,9],
+  [9,8],[10,8],[11,8],[12,8],[13,8],[14,8],
+  [14,7],
+  [14,6],[13,6],[12,6],[11,6],[10,6],[9,6],
+  [8,5],[8,4],[8,3],[8,2],[8,1],[8,0],
+  [7,0],[6,0]
+];
+const ENTRY={red:0,blue:13,green:26,yellow:39};
+const HOME_STRETCH={
+  red:   [[6,1],[6,2],[6,3],[6,4],[6,5],[6,6]],
+  blue:  [[1,8],[2,8],[3,8],[4,8],[5,8],[6,8]],
+  green: [[8,13],[8,12],[8,11],[8,10],[8,9],[8,8]],
+  yellow:[[13,6],[12,6],[11,6],[10,6],[9,6],[8,6]]
+};
+const HOME_BASE={
+  red:   [[2,2],[2,4],[4,2],[4,4]],
+  blue:  [[2,10],[2,12],[4,10],[4,12]],
+  green: [[10,10],[10,12],[12,10],[12,12]],
+  yellow:[[10,2],[10,4],[12,2],[12,4]]
+};
+const SAFE_ABS=[0,8,13,21,26,34,39,47];
+
+function absPos(color,rel){
+  if(rel<0||rel>=52)return rel;
+  return(ENTRY[color]+rel)%52;
+}
+
+// ============================================================
+// BOARD BUILD
+// ============================================================
+function buildBoard(){
+  const b=document.getElementById('ludo-board');
+  b.innerHTML='';
+  for(let r=0;r<15;r++)for(let c=0;c<15;c++){
+    const el=document.createElement('div');
+    el.className='cell';
+    el.id=`C${r}_${c}`;
+    paintCell(el,r,c);
+    b.appendChild(el);
+  }
+}
+function paintCell(el,r,c){
+  if(r>=1&&r<=5&&c>=1&&c<=5){el.classList.add('bg-red');return;}
+  if(r>=1&&r<=5&&c>=9&&c<=13){el.classList.add('bg-blue');return;}
+  if(r>=9&&r<=13&&c>=9&&c<=13){el.classList.add('bg-green');return;}
+  if(r>=9&&r<=13&&c>=1&&c<=5){el.classList.add('bg-yellow');return;}
+  if(r>=6&&r<=8&&c>=6&&c<=8){el.classList.add('bg-center');return;}
+  if(r===7&&c>=1&&c<=5){el.classList.add('bg-red-path');return;}
+  if(c===7&&r>=1&&r<=5){el.classList.add('bg-blue-path');return;}
+  if(r===7&&c>=9&&c<=13){el.classList.add('bg-green-path');return;}
+  if(c===7&&r>=9&&r<=13){el.classList.add('bg-yellow-path');return;}
+  el.classList.add('bg-white');
+  const idx=TRACK52.findIndex(([tr,tc])=>tr===r&&tc===c);
+  if(idx>=0&&SAFE_ABS.includes(idx))el.classList.add('safe-cell');
+}
+
+// ============================================================
+// RENDER PAWNS
+// ============================================================
+function renderPawns(){
+  document.querySelectorAll('.pawn').forEach(e=>e.remove());
+  const groups={};
+  players.forEach(p=>p.pawns.forEach(pw=>{
+    if(pw.done)return;
+    const k=cellKey(p,pw);
+    if(!groups[k])groups[k]=[];
+    groups[k].push({p,pw});
+  }));
+  players.forEach(p=>p.pawns.forEach(pw=>{
+    if(pw.done)return;
+    const cell=getCell(p,pw);
+    if(!cell)return;
+    const k=cellKey(p,pw);
+    const grp=groups[k]||[];
+    const idx=grp.findIndex(g=>g.p.color===p.color&&g.pw.id===pw.id);
+    const el=document.createElement('div');
+    el.className=`pawn pawn-${p.color}${pw.pos===-1?' home-pawn':''}`;
+    el.textContent=pw.id+1;
+    if(pw.pos===-1){
+      const s=[[20,20],[55,20],[20,55],[55,55]];
+      const[lx,ly]=s[pw.id]||[30,30];
+      el.style.cssText=`left:${lx}%;top:${ly}%;width:36%;height:36%`;
+    }else if(grp.length>1){
+      const o=[[8,8],[52,8],[8,52],[52,52]];
+      const[ox,oy]=o[idx%4]||[15,15];
+      el.style.cssText=`left:${ox}%;top:${oy}%;width:42%;height:42%`;
+    }else{
+      el.style.cssText='left:15%;top:15%;width:70%;height:70%';
+    }
+    const isMovable=movable.find(m=>m.color===p.color&&m.id===pw.id);
+    if(isMovable){
+      el.classList.add('highlight');
+      el.addEventListener('click',()=>doMove(p.color,pw.id));
+    }
+    cell.appendChild(el);
+  }));
+}
+
+function cellKey(p,pw){
+  if(pw.pos===-1)return`home_${p.color}_${pw.id}`;
+  if(pw.pos>=52)return`hs_${p.color}_${pw.pos}`;
+  return`t_${absPos(p.color,pw.pos)}`;
+}
+function getCell(p,pw){
+  if(pw.pos===-1){
+    const[r,c]=HOME_BASE[p.color][pw.id];
+    return document.getElementById(`C${r}_${c}`);
+  }
+  if(pw.pos>=52){
+    const hs=HOME_STRETCH[p.color][pw.pos-52];
+    return hs?document.getElementById(`C${hs[0]}_${hs[1]}`):null;
+  }
+  const[r,c]=TRACK52[absPos(p.color,pw.pos)];
+  return document.getElementById(`C${r}_${c}`);
+}
+
+// ============================================================
+// CORNER CARDS
+// ============================================================
+function renderCornerCards(){
+  players.forEach((p,i)=>{
+    const card=document.getElementById(`card-${p.color}`);
+    if(!card)return;
+    const active=i===currentIdx;
+    card.classList.toggle('active-player',active);
+    card.innerHTML=`
+      <div class="cc-top">
+        <span class="cc-flag">${p.flag}</span>
+        <span class="cc-name">${p.name}</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:5px;margin-top:4px">
+        <div class="cc-avatar">${AVATARS[p.color]}</div>
+        <div class="cc-avatar-blank"></div>
+        <div style="flex:1">
+          <div class="cc-coins-row">🪙${p.coins.toLocaleString()}</div>
+          <div class="cc-level">Lvl ${p.level}</div>
+          <div class="cc-stars">${[0,1,2,3,4].map(x=>`<span class="cc-star${x<p.stars?' lit':''}">★</span>`).join('')}</div>
+        </div>
+      </div>
+      <div class="cc-bar"><div class="cc-bar-fill" style="width:${p.hp}%"></div></div>
+    `;
+  });
+}
+
+// ============================================================
+// TIMER
+// ============================================================
+function startTimer(playerName,isMe){
+  if(gameMode!=='online')return;
+  const wrap=document.getElementById('timer-wrap');
+  const fill=document.getElementById('timer-fill');
+  const secs=document.getElementById('timer-secs');
+  const who=document.getElementById('timer-who');
+  wrap.style.display='block';
+  clearInterval(timerInterval);
+  timerLeft=TURN_SECS;
+  fill.style.transition='none';
+  fill.style.width='100%';
+  fill.classList.remove('danger');
+  secs.classList.remove('danger');
+  secs.textContent=TURN_SECS+'s';
+  who.textContent=isMe?'⏱️ Your turn!': `⏱️ ${playerName}'s turn`;
+  setTimeout(()=>{fill.style.transition='width 1s linear';},30);
+  timerInterval=setInterval(()=>{
+    if(!gameActive){clearInterval(timerInterval);return;}
+    timerLeft--;
+    fill.style.width=Math.max(0,(timerLeft/TURN_SECS)*100)+'%';
+    secs.textContent=timerLeft+'s';
+    if(timerLeft<=5){fill.classList.add('danger');secs.classList.add('danger');}
+    if(timerLeft<=0){
+      clearInterval(timerInterval);
+      const p=players[currentIdx];
+      if(!p.isBot){
+        addLog(`⏰ ${p.name}: time up! Auto-moving...`);
+        toast('⏰ Time up! Auto-move!');
+        const btn=document.getElementById('roll-btn');
+        if(!btn.disabled){rollDice(true);}
+        else if(movable.length){doMove(movable[0].color,movable[0].id);}
+        else{nextTurn();}
+      }
+    }
+  },1000);
+}
+
+function stopTimer(){
+  clearInterval(timerInterval);
+  const w=document.getElementById('timer-wrap');
+  if(w)w.style.display='none';
+}
+
+// ============================================================
+// LIVE POPUP — shows dusre players ki moves
+// ============================================================
+function showLiveMove(player,actionText,icon){
+  if(gameMode!=='online')return;
+  if(player.color===myColor)return;
+  const pop=document.getElementById('live-popup');
+  document.getElementById('lp-icon').textContent=AVATARS[player.color];
+  document.getElementById('lp-player').textContent=player.flag+' '+player.name;
+  document.getElementById('lp-action').textContent=actionText;
+  document.getElementById('lp-dice').textContent=icon||'🎲';
+  pop.classList.remove('hide');
+  clearTimeout(livePopupTimer);
+  livePopupTimer=setTimeout(()=>pop.classList.add('hide'),2600);
+}
+
+// ============================================================
+// DICE ROLL
+// ============================================================
+function rollDice(forBot){
+  const btn=document.getElementById('roll-btn');
+  if(!forBot && btn.disabled)return;
+  btn.disabled=true;
+  stopTimer();
+  const df=document.getElementById('dice-face');
+  df.classList.add('spinning');
+  let n=0;
+  clearInterval(rollAnimTimer);
+  rollAnimTimer=setInterval(()=>{
+    df.textContent=DICE_FACES[Math.floor(Math.random()*6)];
+    if(++n>10){
+      clearInterval(rollAnimTimer);
+      df.classList.remove('spinning');
+      diceVal=Math.floor(Math.random()*6)+1;
+      df.textContent=DICE_FACES[diceVal-1];
+      document.getElementById('dice-val').textContent=diceVal;
+      afterRoll();
+    }
+  },55);
+}
+
+function afterRoll(){
+  const p=players[currentIdx];
+  addLog(`${AVATARS[p.color]} <b>${p.name}</b> rolled <b>${diceVal}</b> ${DICE_FACES[diceVal-1]}`);
+  // Show live popup for other players
+  if(p.color!==myColor){
+    showLiveMove(p,`Rolled ${diceVal}`,DICE_FACES[diceVal-1]);
+  }
+  movable=getMoves(p,diceVal);
+  if(!movable.length){
+    addLog(`${p.name}: no moves — skip!`);
+    if(p.color!==myColor)showLiveMove(p,'No moves — skip! 🚫','🚫');
+    else toast('No moves available!');
+    setTimeout(nextTurn,900);
+    return;
+  }
+
+  // AUTO-MOVE logic for bots AND online players:
+  // If rolled 6 → prefer releasing a home pawn first
+  // If only 1 movable → auto-move always
+  // If multiple movable and is bot → auto-pick best move
+  const isAutoPlayer = p.isBot || (gameMode==='online' && p.color!==myColor);
+
+  if(isAutoPlayer){
+    renderPawns();
+    // Prefer: 1) release home pawn on 6, 2) capture move, 3) first movable
+    let bestMove = null;
+    if(diceVal===6){
+      // Prefer releasing home pawn
+      bestMove = movable.find(m=>p.pawns[m.id].pos===-1);
+    }
+    if(!bestMove){
+      // Try to find a capture move
+      bestMove = movable.find(m=>{
+        const pw=p.pawns[m.id];
+        if(pw.pos<0||pw.pos>=52)return false;
+        const newAbs=absPos(p.color,pw.pos+diceVal);
+        if(SAFE_ABS.includes(newAbs))return false;
+        return players.some(op=>{
+          if(op.color===p.color)return false;
+          return op.pawns.some(opPw=>{
+            if(opPw.done||opPw.pos<0||opPw.pos>=52)return false;
+            return absPos(op.color,opPw.pos)===newAbs;
+          });
+        });
+      });
+    }
+    if(!bestMove) bestMove=movable[0];
+    setTimeout(()=>{if(gameActive)doMove(bestMove.color,bestMove.id);},300);
+    return;
+  }
+
+  // Human player with multiple choices
+  if(movable.length===1){
+    renderPawns();
+    setTimeout(()=>{if(gameActive)doMove(movable[0].color,movable[0].id);},180);
+    return;
+  }
+  // Multiple choices — highlight pawns for human to pick
+  // But if rolled 6 and has home pawns, auto-release one home pawn
+  if(diceVal===6){
+    const homePawns=movable.filter(m=>p.pawns[m.id].pos===-1);
+    if(homePawns.length>0&&movable.every(m=>p.pawns[m.id].pos===-1)){
+      // All movable are home pawns (multiple 6-roll), auto-release first
+      renderPawns();
+      setTimeout(()=>{if(gameActive)doMove(homePawns[0].color,homePawns[0].id);},180);
+      return;
+    }
+  }
+  renderPawns();
+  document.getElementById('dice-hint').textContent='Tap a highlighted pawn!';
+}
+
+function getMoves(p,dice){
+  const res=[];
+  p.pawns.forEach(pw=>{
+    if(pw.done)return;
+    if(pw.pos===-1){if(dice===6)res.push({color:p.color,id:pw.id});}
+    else if(pw.pos+dice<=57)res.push({color:p.color,id:pw.id});
+  });
+  return res;
+}
+
+// ============================================================
+// MOVE A PAWN
+// ============================================================
+function doMove(color,pid){
+  if(!gameActive)return;
+  const p=players.find(x=>x.color===color);
+  if(!p)return;
+  const pw=p.pawns[pid];
+  movable=[];
+
+  if(pw.pos===-1){
+    // Release from home
+    pw.pos=0;
+    addLog(`${AVATARS[p.color]} ${p.name} released pawn ${pid+1}! 🎉`);
+    if(p.color===myColor)toast('Pawn out! 🎉');
+    else showLiveMove(p,`Released pawn ${pid+1}! 🎉`,'🎉');
+  }else{
+    pw.pos+=diceVal;
+    if(pw.pos>=57){
+      pw.pos=57; pw.done=true;
+      p.coins+=50; p.score+=50;
+      addLog(`${AVATARS[p.color]} ${p.name}'s pawn ${pid+1} → HOME! 🏠 +50🪙`);
+      if(p.color===myColor)toast('Pawn home! +50🪙 🏠');
+      else showLiveMove(p,`Pawn ${pid+1} reached HOME! 🏠`,'🏠');
+      checkAllDone(p);
+    }else{
+      const captured=checkCapture(p,pw);
+      if(captured){
+        if(p.color!==myColor)showLiveMove(p,`Captured a pawn! 💥 +25🪙`,'💥');
+      }else{
+        if(p.color!==myColor)showLiveMove(p,`Moved pawn ${pid+1} → pos ${pw.pos}`,DICE_FACES[diceVal-1]);
+      }
+    }
+  }
+
+  updateCoins(p);
+  renderPawns();
+  renderCornerCards();
+
+  // Bonus turn on 6
+  if(diceVal===6&&!pw.done){
+    addLog(`${p.name} gets bonus roll for 6! 🎯`);
+    if(p.color===myColor)toast('Bonus roll for 6! 🎯');
+    else showLiveMove(p,'Bonus roll for 6! 🎯','⚅');
+    setTimeout(()=>{if(gameActive)enableRoll(currentIdx);},400);
+    return;
+  }
+  setTimeout(()=>{if(gameActive)nextTurn();},450);
+}
+
+function checkCapture(player,pawn){
+  const abs=absPos(player.color,pawn.pos);
+  if(SAFE_ABS.includes(abs)||pawn.pos>=52)return false;
+  let captured=false;
+  players.forEach(op=>{
+    if(op.color===player.color)return;
+    op.pawns.forEach(opPw=>{
+      if(opPw.done||opPw.pos<0||opPw.pos>=52)return;
+      if(absPos(op.color,opPw.pos)===abs){
+        opPw.pos=-1;
+        player.coins+=25; player.score+=25;
+        addLog(`💥 ${player.name} CAPTURED ${op.name}'s pawn! +25🪙`);
+        if(player.color===myColor)toast('CAPTURE! +25🪙 💥');
+        captured=true;
+      }
+    });
+  });
+  return captured;
+}
+
+function checkAllDone(p){
+  if(p.pawns.every(pw=>pw.done)){
+    p.coins+=100; p.score+=100;
+    setTimeout(()=>showWin(p),600);
+  }
+}
+
+// ============================================================
+// TURN MANAGEMENT
+// ============================================================
+function nextTurn(){
+  currentIdx=(currentIdx+1)%players.length;
+  // Skip finished players
+  let guard=0;
+  while(players[currentIdx].pawns.every(pw=>pw.done)&&guard<4){
+    currentIdx=(currentIdx+1)%players.length;guard++;
+  }
+  enableRoll(currentIdx);
+  renderCornerCards();
+}
+
+function enableRoll(idx){
+  const p=players[idx];
+  const isMe=(p.color===myColor&&!p.isBot);
+  const btn=document.getElementById('roll-btn');
+  btn.disabled=p.isBot;
+  document.getElementById('dice-face').textContent='🎲';
+  document.getElementById('dice-hint').textContent=p.isBot?'Opponent thinking...':'Tap to roll!';
+  document.getElementById('turn-text').textContent=isMe?'🟡 Your turn! Roll the dice!':
+    `${AVATARS[p.color]} ${p.name}'s turn...`;
+  // Start timer (online only)
+  startTimer(p.name,isMe);
+  // Update active card highlight
+  COLORS.forEach(c=>{
+    const card=document.getElementById(`card-${c}`);
+    if(card)card.classList.toggle('active-player',c===p.color);
+  });
+  // Bot auto-roll — FAST in online mode
+  if(p.isBot){
+    const delay=gameMode==='online'
+      ?(300+Math.random()*500)
+      :(500+Math.random()*700);
+    setTimeout(()=>{if(gameActive)rollDice(true);},delay);
+  }
+}
+
+function updateCoins(p){
+  if(p.color===myColor){
+    document.getElementById('total-coins').textContent=p.coins.toLocaleString();
+  }
+}
+
+// ============================================================
+// LOG & TOAST
+// ============================================================
+function addLog(msg){
+  const gl=document.getElementById('game-log');
+  const d=document.createElement('div');
+  d.className='log-line'; d.innerHTML=msg;
+  gl.prepend(d);
+  while(gl.children.length>30)gl.removeChild(gl.lastChild);
+}
+let toastTimer;
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.remove('hide');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.add('hide'),2200);
+}
+
+// ============================================================
+// NAVIGATION
+// ============================================================
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+function goHome(){
+  gameActive=false;
+  stopTimer();
+  clearInterval(rollAnimTimer);
+  document.getElementById('live-popup').classList.add('hide');
+  showScreen('home');
+}
+
+// ============================================================
+// MODE SELECT
+// ============================================================
+function showModeSelect(mode){
+  gameMode=mode;
+  const inner=document.getElementById('mode-cards-inner');
+  if(mode==='computer'){
+    inner.innerHTML=`<div class="mcard computer-card" onclick="showPlayerSelect()"><div class="mcard-emoji">🤖</div><div class="mcard-label">vs Computer</div></div>`;
+    document.getElementById('play-tagline').textContent='Challenge the AI!';
+  }else{
+    inner.innerHTML=`<div class="mcard local-card" onclick="showPlayerSelect()"><div class="mcard-emoji">👨‍👩‍👧‍👦</div><div class="mcard-label">Local Play</div></div>`;
+    document.getElementById('play-tagline').textContent='Play With Friends Locally';
+  }
+  showScreen('mode-select');
+}
+
+let selCount=4,selColor='blue';
+function showPlayerSelect(){
+  selCount=4; selColor='blue';
+  document.querySelectorAll('.pcount-btn').forEach(b=>b.classList.toggle('selected',+b.dataset.count===4));
+  document.querySelectorAll('.color-btn').forEach(b=>{
+    const isSel=b.dataset.color==='blue';
+    b.classList.toggle('selected',isSel);
+    b.textContent=isSel?'✓':'';
+  });
+  showScreen('player-select');
+}
+function selectCount(n){
+  selCount=n;
+  document.querySelectorAll('.pcount-btn').forEach(b=>b.classList.toggle('selected',+b.dataset.count===n));
+}
+function selectColor(c){
+  selColor=c;
+  document.querySelectorAll('.color-btn').forEach(b=>{
+    const isSel=b.dataset.color===c;
+    b.classList.toggle('selected',isSel);
+    b.textContent=isSel?'✓':'';
+  });
+}
+
+function startSelectedGame(){
+  myColor=selColor;
+  const myName=document.getElementById('player-name').value.trim()||'You';
+  const activeColors=COLORS.slice(0,selCount);
+  players=activeColors.map((col,i)=>{
+    const isMe=col===myColor;
+    return{
+      color:col, name:isMe?myName:BOT_NAMES[i],
+      isBot:(gameMode==='computer')?!isMe:false,
+      flag:FLAGS[i],
+      coins:isMe?4670:Math.floor(1500+Math.random()*3500),
+      level:isMe?1:Math.floor(1+Math.random()*5),
+      stars:isMe?0:Math.floor(Math.random()*5),
+      hp:100, score:0,
+      pawns:[0,1,2,3].map(id=>({id,pos:-1,done:false}))
+    };
+  });
+  launchGame();
+}
+
+// ============================================================
+// ONLINE LOBBY
+// ============================================================
+function showOnlineLobby(){
+  gameMode='online';
+  const code=(Math.random().toString(36).substr(2,6)).toUpperCase();
+  document.getElementById('room-code').textContent=code;
+  const fakePlayers=[
+    {name:'Vikash Jaiswal',coins:'4,670',level:1,flag:'🇮🇳',color:'red',status:'🟢 Online'},
+    {name:'Uendi',coins:'2,840',level:2,flag:'🇦🇱',color:'blue',status:'🟡 Ready'},
+    {name:'Kabirul Mondal',coins:'4,100',level:1,flag:'🌍',color:'green',status:'🟢 Online'},
+    {name:'Guest9539',coins:'1,950',level:4,flag:'🇳🇬',color:'yellow',status:'🟡 Waiting'},
+  ];
+  document.getElementById('online-grid').innerHTML=fakePlayers.map((p,i)=>`
+    <div class="op-card">
+      <div class="op-avatar">${AVATARS[p.color]}</div>
+      <div class="op-info">
+        <div class="op-name">${p.flag} ${p.name}</div>
+        <div class="op-level">${p.status} • Lvl ${p.level}</div>
+        <div class="op-coins">🪙 ${p.coins}</div>
+      </div>
+      ${i===0
+        ?'<span style="font-size:10px;color:#6f6;font-weight:800;background:rgba(34,197,94,.15);border-radius:6px;padding:3px 7px">YOU</span>'
+        :`<button class="invite-btn" id="inv-${i}" onclick="onlineInvite(${i},'${p.name}')">Invite</button>`
+      }
+    </div>
+  `).join('');
+  showScreen('online-lobby');
+}
+function onlineInvite(i,name){
+  const btn=document.getElementById(`inv-${i}`);
+  if(btn){btn.textContent='✓ In';btn.disabled=true;btn.style.background='linear-gradient(135deg,#22c55e,#15803d)';}
+  toast(`${name} joined! 🎉`);
+}
+function startOnlineGame(){
+  myColor='red';
+  players=[
+    {color:'red',name:'You',isBot:false,flag:'🇮🇳',coins:4670,level:1,stars:0,hp:100,score:0,pawns:[0,1,2,3].map(id=>({id,pos:-1,done:false}))},
+    {color:'blue',name:'Uendi',isBot:true,flag:'🇦🇱',coins:2840,level:2,stars:3,hp:100,score:0,pawns:[0,1,2,3].map(id=>({id,pos:-1,done:false}))},
+    {color:'green',name:'Kabirul Mondal',isBot:true,flag:'🌍',coins:4100,level:1,stars:2,hp:100,score:0,pawns:[0,1,2,3].map(id=>({id,pos:-1,done:false}))},
+    {color:'yellow',name:'Guest9539',isBot:true,flag:'🇳🇬',coins:1950,level:4,stars:4,hp:100,score:0,pawns:[0,1,2,3].map(id=>({id,pos:-1,done:false}))},
+  ];
+  launchGame();
+}
+
+// ============================================================
+// LAUNCH GAME
+// ============================================================
+function launchGame(){
+  gameActive=true;
+  currentIdx=0; diceVal=0; movable=[];
+  document.getElementById('game-log').innerHTML='';
+  document.getElementById('dice-face').textContent='🎲';
+  document.getElementById('dice-val').textContent='-';
+  document.getElementById('live-popup').classList.add('hide');
+  document.getElementById('timer-wrap').style.display='none';
+  buildBoard();
+  COLORS.forEach(c=>{const card=document.getElementById(`card-${c}`);if(card)card.innerHTML='';});
+  renderPawns();
+  renderCornerCards();
+  showScreen('game');
+  addLog('🎲 Game started! Good luck! 🍀');
+  if(gameMode==='online')addLog('⏱️ 15 seconds per turn. Dusre players ki moves live dikhegi!');
+  enableRoll(0);
+}
+
+// ============================================================
+// WIN
+// ============================================================
+function showWin(p){
+  gameActive=false;
+  stopTimer();
+  showScreen('win-screen');
+  document.getElementById('win-name').textContent=`${p.name} Wins!`;
+  document.getElementById('win-sub').textContent=`${p.flag} ${p.color.toUpperCase()} • ${p.coins.toLocaleString()} coins total`;
+  document.getElementById('win-pts').textContent=`+${p.score}`;
+  launchConfetti();
+  const e=leaderboard.find(x=>x.name===p.name);
+  if(e){e.pts+=p.score;e.games++;}
+  else leaderboard.push({name:p.name,pts:p.score,games:1,flag:p.flag});
+  leaderboard.sort((a,b)=>b.pts-a.pts);
+  localStorage.setItem('ludoLB4',JSON.stringify(leaderboard));
+}
+
+// ============================================================
+// LEADERBOARD
+// ============================================================
+function showLeaderboard(){
+  const medals=['🥇','🥈','🥉'];
+  const list=document.getElementById('lb-list');
+  if(!leaderboard.length){
+    list.innerHTML='<div style="text-align:center;color:rgba(255,255,255,0.4);padding:24px;font-size:15px">Abhi koi game nahi khela! 🎲</div>';
+  }else{
+    list.innerHTML=leaderboard.slice(0,10).map((e,i)=>`
+      <div class="lb-row">
+        <div class="lb-medal">${medals[i]||'#'+(i+1)}</div>
+        <div class="lb-ava">${e.flag||'🌍'}</div>
+        <div class="lb-name">${e.name}</div>
+        <div class="lb-games">${e.games}g</div>
+        <div class="lb-pts">${e.pts}</div>
+      </div>
+    `).join('');
+  }
+  showScreen('leaderboard');
+}
+
+// ============================================================
+// CONFETTI
+// ============================================================
+function launchConfetti(){
+  const c=document.getElementById('confetti-c');c.innerHTML='';
+  const cols=['#e03030','#2979d4','#1e9e3e','#e8c800','#fff','#ff69b4','#ff8c00'];
+  for(let i=0;i<90;i++){
+    const p=document.createElement('div');
+    p.className='cp';
+    p.style.cssText=`left:${Math.random()*100}vw;background:${cols[~~(Math.random()*cols.length)]};animation-duration:${2+Math.random()*3}s;animation-delay:${Math.random()*2}s;transform:rotate(${Math.random()*360}deg)`;
+    c.appendChild(p);
+  }
+  setTimeout(()=>c.innerHTML='',7000);
+}
+</script>
+</body>
+</html>

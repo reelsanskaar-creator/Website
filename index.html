@@ -1,0 +1,2519 @@
+
+<!DOCTYPE html>
+<html lang="gu" data-theme="light">
+<head>
+    <link rel="manifest" href="./manifest.json">
+    
+      <!-- Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then((reg) => console.log('Service Worker registered!', reg))
+          .catch((err) => console.log('Service Worker registration failed:', err));
+      });
+    }
+  </script>
+  
+ 
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JGVFriendship Smart Exam Portal & Library</title>
+    <!-- Tailwind CSS Engine -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js Engine -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: ['class', '[data-theme="dark"]'],
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: 'var(--bg-50)',
+                            100: 'var(--bg-100)',
+                            500: 'var(--primary)',
+                            600: 'var(--primary-hover)',
+                            900: 'var(--primary-dark)',
+                        }
+                    },
+                    boxShadow: {
+                        'glow-primary': '0 0 20px -3px rgba(99, 102, 241, 0.45)',
+                        'glow-emerald': '0 0 20px -3px rgba(16, 185, 129, 0.45)',
+                        'glow-rose': '0 0 20px -3px rgba(244, 63, 94, 0.45)',
+                        'advanced-btn': '0 4px 15px -3px rgba(0, 0, 0, 0.15), 0 2px 6px -2px rgba(0, 0, 0, 0.08)'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        :root[data-theme="light"] {
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #0f172a;
+            --muted: #64748b;
+            --border: #e2e8f0;
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --primary-gradient: linear-gradient(135deg, #6366f1 0%, #4f46e5 50%, #4338ca 100%);
+            --sidebar: #ffffff;
+            --header: #ffffff;
+            --shadow: 0 4px 12px -2px rgb(0 0 0 / 0.06), 0 2px 6px -2px rgb(0 0 0 / 0.04);
+        }
+        :root[data-theme="dark"] {
+            --bg: #0b0f19;
+            --card: #1e293b;
+            --text: #f8fafc;
+            --muted: #94a3b8;
+            --border: #334155;
+            --primary: #818cf8;
+            --primary-hover: #6366f1;
+            --primary-gradient: linear-gradient(135deg, #6366f1 0%, #818cf8 50%, #4f46e5 100%);
+            --sidebar: #0f172a;
+            --header: #1e293b;
+            --shadow: 0 4px 12px -2px rgb(0 0 0 / 0.4);
+        }
+        :root[data-theme="emerald"] {
+            --bg: #f0fdf4;
+            --card: #ffffff;
+            --text: #064e3b;
+            --muted: #059669;
+            --border: #d1fae5;
+            --primary: #10b981;
+            --primary-hover: #059669;
+            --primary-gradient: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);
+            --sidebar: #ffffff;
+            --header: #ffffff;
+            --shadow: 0 4px 12px -2px rgba(16, 185, 129, 0.12);
+        }
+        :root[data-theme="sunset"] {
+            --bg: #fff1f2;
+            --card: #ffffff;
+            --text: #881337;
+            --muted: #fb7185;
+            --border: #ffe4e6;
+            --primary: #f43f5e;
+            --primary-hover: #e11d48;
+            --primary-gradient: linear-gradient(135deg, #f43f5e 0%, #e11d48 50%, #be123c 100%);
+            --sidebar: #ffffff;
+            --header: #ffffff;
+            --shadow: 0 4px 12px -2px rgba(244, 63, 94, 0.12);
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .custom-card {
+            background-color: var(--card);
+            border-color: var(--border);
+            box-shadow: var(--shadow);
+        }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes shine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(200%); }
+        }
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 15px -2px rgba(99, 102, 241, 0.5); }
+            50% { box-shadow: 0 0 25px 4px rgba(99, 102, 241, 0.8); }
+        }
+
+        .animate-fade {
+            animation: fadeIn 0.35s ease-out forwards;
+        }
+
+        .btn-adv {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            border-radius: 0.85rem;
+            transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+            cursor: pointer;
+            user-select: none;
+        }
+        .btn-adv:active {
+            transform: scale(0.96) !important;
+        }
+        .btn-adv::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+            transform: translateX(-100%);
+            pointer-events: none;
+        }
+        .btn-adv:hover::after {
+            animation: shine 1.1s ease-in-out infinite;
+        }
+
+        .btn-adv-primary {
+            background: var(--primary-gradient);
+            color: #ffffff;
+            box-shadow: 0 4px 14px -2px rgba(99, 102, 241, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        .btn-adv-primary:hover {
+            box-shadow: 0 6px 20px -2px rgba(99, 102, 241, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+            transform: translateY(-1.5px);
+        }
+
+        .btn-adv-emerald {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: #ffffff;
+            box-shadow: 0 4px 14px -2px rgba(16, 185, 129, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        .btn-adv-emerald:hover {
+            box-shadow: 0 6px 20px -2px rgba(16, 185, 129, 0.6);
+            transform: translateY(-1.5px);
+        }
+
+        .btn-adv-pulse {
+            background: linear-gradient(135deg, #4f46e5 0%, #6366f1 50%, #818cf8 100%);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            animation: pulseGlow 2.5s infinite;
+        }
+        .btn-adv-pulse:hover {
+            transform: translateY(-1.5px) scale(1.01);
+        }
+
+        .btn-adv-secondary {
+            background: var(--card);
+            color: var(--text);
+            border: 1px solid var(--border);
+            box-shadow: 0 2px 6px -1px rgb(0 0 0 / 0.05);
+        }
+        .btn-adv-secondary:hover {
+            background: var(--border);
+            transform: translateY(-1px);
+        }
+
+        .btn-adv-rose {
+            background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%);
+            color: #ffffff;
+            box-shadow: 0 4px 12px -2px rgba(244, 63, 94, 0.35);
+        }
+        .btn-adv-rose:hover {
+            box-shadow: 0 6px 18px -2px rgba(244, 63, 94, 0.55);
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col overflow-x-hidden">
+
+    <!-- Global Fullscreen Data Loading Overlay -->
+    <div id="globalLoader" class="fixed inset-0 bg-black/75 backdrop-blur-md z-50 flex flex-col items-center justify-center p-4 transition-opacity duration-300">
+        <div class="custom-card p-8 rounded-2xl border text-center space-y-4 max-w-sm w-full shadow-2xl animate-fade">
+            <div class="relative w-16 h-16 mx-auto">
+                <div class="absolute inset-0 rounded-full border-4 border-t-[var(--primary)] border-r-transparent border-b-[var(--primary)] border-l-transparent animate-spin"></div>
+                <div class="absolute inset-2 rounded-full border-4 border-emerald-500 border-t-transparent border-b-transparent animate-spin" style="animation-direction: reverse;"></div>
+            </div>
+            <div class="space-y-1">
+                <h3 id="loaderHeading" class="font-bold text-base">બધો ડેટા લોડ થઈ રહ્યો છે...</h3>
+                <p id="loaderSubheading" class="text-xs text-[var(--muted)]">લાઈવ સીંક અને પુસ્તકો લોડ થઈ રહ્યા છે, કૃપા કરીને થોડી પ્રતીક્ષા કરો.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Main Navigation Links -->
+    <nav class="bg-[var(--card)] border-b border-[var(--border)] px-6 py-2.5 flex items-center justify-between gap-4 text-xs font-semibold shadow-xs flex-wrap z-30">
+        <div class="flex items-center gap-4 flex-wrap">
+            <a href="index.html" class="text-[var(--primary)] hover:underline flex items-center gap-1 font-bold" data-i18n="navHome">🏠 હોમ પેજ</a>
+            <span class="text-[var(--muted)]">|</span>
+            <a href="all-in-one-tools.html" class="hover:text-[var(--primary)] transition flex items-center gap-1" data-i18n="navTools">🧰 ઓલ ઇન વન ટૂલ્સ</a>
+            <span class="text-[var(--muted)]">|</span>
+            <a href="other.html" class="hover:text-[var(--primary)] transition flex items-center gap-1" data-i18n="navServices">🌐 અન્ય સેવાઓ</a>
+        </div>
+
+        <!-- Language Selector Dropdown -->
+        <div class="flex items-center gap-2">
+            <span class="text-[var(--muted)] text-[11px] font-bold uppercase" data-i18n="lblLanguage">🌐 ભાષા / Language:</span>
+            <select id="languageSelect" onchange="changeLanguage(this.value)" class="bg-[var(--bg)] border border-[var(--border)] rounded-lg px-2.5 py-1 text-xs font-semibold focus:outline-none cursor-pointer">
+                <option value="gu">ગુજરાતી (Gujarati)</option>
+                <option value="hi">हिन्दी (Hindi)</option>
+                <option value="en">English</option>
+            </select>
+        </div>
+    </nav>
+
+    <div class="flex-1 flex flex-col md:flex-row">
+        <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none max-w-sm w-full px-4"></div>
+
+        <div id="customConfirmModal" class="fixed inset-0 bg-black/70 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
+            <div class="custom-card w-full max-w-sm rounded-2xl border p-6 space-y-5 shadow-2xl animate-fade text-center">
+                <div class="text-4xl">⚠️</div>
+                <div class="space-y-1">
+                    <h3 id="confirmModalTitle" class="font-bold text-base">Confirmation Required</h3>
+                    <p id="confirmModalDesc" class="text-xs text-[var(--muted)]">Are you sure you want to proceed?</p>
+                </div>
+                <div class="flex gap-3 justify-center">
+                    <button id="confirmCancelBtn" class="btn-adv btn-adv-secondary px-4 py-2 text-xs flex-1">Cancel</button>
+                    <button id="confirmOkBtn" class="btn-adv btn-adv-primary px-4 py-2 text-xs flex-1">Confirm</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="loginModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+            <div class="custom-card w-full max-w-md rounded-2xl border p-8 space-y-6 shadow-2xl animate-fade">
+                <div class="text-center space-y-2">
+                    <div class="text-4xl">🔐</div>
+                    <h2 id="authModalTitle" class="text-xl font-bold" data-i18n="loginTitle">વિદ્યાર્થી પોર્ટલ લોગીન</h2>
+                    <p id="authModalSub" class="text-xs text-[var(--muted)]" data-i18n="loginSub">Strict Policy: Exactly ONE account permitted per Gmail address</p>
+                </div>
+                
+                <form id="loginForm" onsubmit="handleLoginSubmit(event)" class="space-y-4">
+                    <div class="space-y-1">
+                        <label class="block text-xs font-semibold text-[var(--muted)] uppercase tracking-wider" data-i18n="lblUsername">યુઝરનેમ / સ્ટુડન્ટ આઈડી</label>
+                        <input type="text" id="loginUsername" required placeholder="e.g. rahul_verma" class="w-full bg-[var(--bg)] border border-[var(--border)] rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-[var(--primary)] transition" />
+                    </div>
+                    <div class="space-y-1">
+                        <div class="flex justify-between items-center">
+                            <label class="block text-xs font-semibold text-[var(--muted)] uppercase tracking-wider" data-i18n="lblPassword">પાસવર્ડ</label>
+                            <button type="button" onclick="switchAuthMode('forgot')" class="text-[11px] text-[var(--primary)] hover:underline font-medium cursor-pointer" data-i18n="btnForgot">પાસવર્ડ ભૂલી ગયા?</button>
+                        </div>
+                        <input type="password" id="loginPassword" required placeholder="••••••••" class="w-full bg-[var(--bg)] border border-[var(--border)] rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-[var(--primary)] transition" />
+                    </div>
+                    
+                    <input type="hidden" id="hiddenClientIp" value="" />
+                    <div id="loginErrorMsg" class="text-xs text-rose-500 font-medium text-center hidden"></div>
+
+                    <button type="submit" class="btn-adv btn-adv-pulse w-full py-3.5 text-xs font-bold tracking-wide" data-i18n="btnLoginSubmit">
+                        પોર્ટલમાં લોગીન કરો
+                    </button>
+
+                    <div class="text-center pt-2">
+                        <button type="button" onclick="switchAuthMode('register')" class="text-xs text-[var(--primary)] hover:underline font-medium cursor-pointer" data-i18n="btnRegisterSwitch">
+                            એકાઉન્ટ નથી? જીમેઇલ સાથે નોંધણી કરો →
+                        </button>
+                    </div>
+                </form>
+
+                <form id="registerForm" onsubmit="handleRegisterSubmit(event)" class="space-y-4 hidden">
+                    <div class="space-y-1">
+                        <label class="block text-xs font-semibold text-[var(--muted)] uppercase tracking-wider">Choose Username</label>
+                        <input type="text" id="regUsername" required placeholder="e.g. rahul_verma" class="w-full bg-[var(--bg)] border border-[var(--border)] rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-[var(--primary)] transition" />
+                    </div>
+                    <div class="space-y-1">
+                        <label class="block text-xs font-semibold text-[var(--muted)] uppercase tracking-wider">Gmail Account (Strictly 1 Account per Gmail)</label>
+                        <input type="email" id="regEmail" required placeholder="student@gmail.com" class="w-full bg-[var(--bg)] border border-[var(--border)] rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-[var(--primary)] transition" />
+                    </div>
+                    <div class="space-y-1">
+                        <label class="block text-xs font-semibold text-[var(--muted)] uppercase tracking-wider">Create Password</label>
+                        <input type="password" id="regPassword" required placeholder="••••••••" class="w-full bg-[var(--bg)] border border-[var(--border)] rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-[var(--primary)] transition" />
+                    </div>
+
+                    <div id="regErrorMsg" class="text-xs text-rose-500 font-medium text-center hidden"></div>
+
+                    <button type="submit" class="btn-adv btn-adv-emerald w-full py-3 text-xs">
+                        📧 Verify Gmail & Send OTP
+                    </button>
+
+                    <div class="text-center pt-2">
+                        <button type="button" onclick="switchAuthMode('login')" class="text-xs text-[var(--primary)] hover:underline font-medium cursor-pointer">
+                            Already have an account? Login here →
+                        </button>
+                    </div>
+                </form>
+
+                <form id="forgotForm" onsubmit="handleForgotSubmit(event)" class="space-y-4 hidden">
+                    <div class="space-y-1">
+                        <label class="block text-xs font-semibold text-[var(--muted)] uppercase tracking-wider">Verified Gmail Account</label>
+                        <input type="email" id="forgotEmail" required placeholder="student@gmail.com" class="w-full bg-[var(--bg)] border border-[var(--border)] rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-[var(--primary)] transition" />
+                    </div>
+                    <div class="space-y-1">
+                        <label class="block text-xs font-semibold text-[var(--muted)] uppercase tracking-wider">New Password</label>
+                        <input type="password" id="newResetPassword" required placeholder="••••••••" class="w-full bg-[var(--bg)] border border-[var(--border)] rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-[var(--primary)] transition" />
+                    </div>
+
+                    <div id="forgotErrorMsg" class="text-xs text-rose-500 font-medium text-center hidden"></div>
+                    <div id="forgotSuccessMsg" class="text-xs text-emerald-500 font-medium text-center hidden"></div>
+
+                    <button type="submit" class="btn-adv btn-adv-primary w-full py-3 text-xs">
+                        🔑 Reset Password
+                    </button>
+
+                    <div class="text-center pt-2">
+                        <button type="button" onclick="switchAuthMode('login')" class="text-xs text-[var(--primary)] hover:underline font-medium cursor-pointer">
+                            Remember password? Back to Login →
+                        </button>
+                    </div>
+                </form>
+
+                <div id="otpFormSection" class="space-y-4 hidden">
+                    <div class="p-4 bg-[var(--bg)] rounded-xl border border-[var(--border)] text-xs space-y-2 text-[var(--text)] font-mono whitespace-pre-line shadow-inner">
+<span>Hello,
+
+Your 6-digit OTP verification code for JGVFriendship Multi-Stage Examination Portal has been dispatched to your Gmail inbox.
+
+Regards,
+JGVFriendship System</span>
+                    </div>
+
+                    <div class="space-y-1 font-sans">
+                        <label class="block text-xs font-semibold text-[var(--muted)] uppercase tracking-wider">Enter 6-Digit OTP from Gmail App</label>
+                        <input type="text" id="enteredOtpCode" maxlength="6" required placeholder="123456" class="w-full tracking-widest text-center text-lg bg-[var(--bg)] border border-[var(--border)] rounded-xl px-4 py-2.5 font-bold focus:outline-none focus:ring-2 focus:ring-[var(--primary)] transition" />
+                    </div>
+
+                    <div id="otpErrorMsg" class="text-xs text-rose-500 font-medium text-center hidden font-sans"></div>
+
+                    <button type="button" onclick="verifyOtpAndAuthenticate()" class="btn-adv btn-adv-emerald w-full py-3 text-xs font-sans">
+                        ⚡ Verify OTP & Enter Portal
+                    </button>
+                    <div class="text-center pt-1 flex justify-center items-center text-[11px] text-[var(--muted)] px-1 font-sans">
+                        <button type="button" onclick="resendOtpCode()" class="underline cursor-pointer">Resend OTP code</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="md:hidden flex items-center justify-between p-4 border-b border-[var(--border)] bg-[var(--header)] sticky top-0 z-40">
+            <div class="flex items-center gap-2">
+                <span class="text-xl">🤝📚</span>
+                <span class="font-bold text-lg">JGVFriendship Pro</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <button onclick="logoutSession()" class="btn-adv btn-adv-rose px-3 py-1.5 text-xs font-medium" data-i18n="btnLogout">લૉગઆઉટ</button>
+                <button onclick="toggleMobileSidebar()" class="btn-adv btn-adv-secondary px-3 py-1.5 text-xs font-medium">☰ Menu</button>
+            </div>
+        </div>
+
+        <div id="sidebarOverlay" class="fixed inset-0 bg-black/50 z-40 hidden md:hidden" onclick="toggleMobileSidebar()"></div>
+
+        <aside id="sidebar" class="fixed md:sticky top-0 h-screen w-[290px] bg-[var(--sidebar)] border-r border-[var(--border)] flex flex-col z-50 transition-transform duration-300 -translate-x-full md:translate-x-0 shrink-0">
+            <div class="p-5 border-b border-[var(--border)] flex justify-between items-center">
+                <div>
+                    <div class="text-lg font-bold flex items-center gap-2"><span>🤝📚</span> JGVFriendship</div>
+                    <div class="text-[11px] text-[var(--muted)] mt-0.5">Dynamic Stage Examination Portal</div>
+                </div>
+                <button class="md:hidden btn-adv btn-adv-secondary text-xs px-2.5 py-1" onclick="toggleMobileSidebar()">✕</button>
+            </div>
+
+            <div class="p-4 flex-1 overflow-y-auto space-y-6">
+                <div class="space-y-1.5">
+                    <div class="text-[11px] font-bold uppercase tracking-wider text-[var(--muted)] px-3 mb-2" data-i18n="navTitle">નેવિગેશન મોડ્યુલ્સ</div>
+                    <a onclick="switchTab('dashboard')" id="nav-dashboard" class="btn-adv btn-adv-primary w-full justify-start px-3.5 py-2.5 text-xs gap-3">
+                        📊 <span data-i18n="tabDashboard">સિસ્ટમ ડેશબોર્ડ</span>
+                    </a>
+                    <a onclick="switchTab('books')" id="nav-books" class="btn-adv btn-adv-secondary w-full justify-start px-3.5 py-2.5 text-xs gap-3">
+                        📖 <span data-i18n="tabBooks">ઓટોમેટેડ લાઇબ્રેરી</span>
+                    </a>
+                    <a onclick="switchTab('favorites')" id="nav-favorites" class="btn-adv btn-adv-secondary w-full justify-start px-3.5 py-2.5 text-xs gap-3">
+                        💜 <span data-i18n="tabFavorites">પ્રિય પુસ્તકો (Favorites)</span>
+                    </a>
+                    <a onclick="switchTab('mcq')" id="nav-mcq" class="btn-adv btn-adv-secondary w-full justify-start px-3.5 py-2.5 text-xs gap-3">
+                        ✍️ <span data-i18n="tabMcq">MCQ પરીક્ષા સ્ટેજ</span>
+                    </a>
+                    <a onclick="switchTab('results')" id="nav-results" class="btn-adv btn-adv-secondary w-full justify-start px-3.5 py-2.5 text-xs gap-3">
+                        🏆 <span data-i18n="tabResults">પરીક્ષા પરિણામ લીડરબોર્ડ</span>
+                    </a>
+                </div>
+
+                <div class="pt-2 border-t border-[var(--border)] space-y-2">
+                    <div class="text-[11px] font-bold uppercase tracking-wider text-[var(--muted)] px-3" data-i18n="lblAudioTitle">સાઉન્ડ અને ટોન (અવાજ)</div>
+                    <div class="px-2 space-y-2 text-xs">
+                        <div class="flex justify-between items-center bg-[var(--bg)] p-2.5 rounded-xl border border-[var(--border)]">
+                            <span class="font-medium" data-i18n="lblAudioActive">અવાજ સક્રિય</span>
+                            <input type="checkbox" id="audioToneEnabled" checked class="w-4 h-4 accent-[var(--primary)] cursor-pointer" />
+                        </div>
+                        <div class="space-y-1">
+                            <label class="block text-[11px] text-[var(--muted)] font-medium" data-i18n="lblAudioPreset">ટોન શૈલી પસંદ કરો</label>
+                            <select id="audioToneStyle" class="w-full bg-[var(--bg)] border border-[var(--border)] rounded-xl px-3 py-2 text-xs font-medium focus:outline-none">
+                                <option value="pleasant">🎵 Pleasant Bell (મધુર ઘંટડી)</option>
+                                <option value="arcade">🕹️ Retro Arcade (આર્કેડ સાઉન્ડ)</option>
+                                <option value="chime">🔔 Soft Chime (સોફ્ટ ચાઇમ)</option>
+                                <option value="digital">💻 Digital Beep (ડિજિટલ બીપ)</option>
+                            </select>
+                        </div>
+                        <button type="button" onclick="playAudioToneTest()" class="btn-adv btn-adv-secondary w-full py-2 text-xs" data-i18n="btnTestSound">
+                            🔊 અવાજ ટેસ્ટ કરો
+                        </button>
+                    </div>
+                </div>
+
+                <div class="pt-2 border-t border-[var(--border)]">
+                    <div class="text-[11px] font-bold uppercase tracking-wider text-[var(--muted)] px-3 mb-2" data-i18n="lblThemeTitle">થીમ પસંદ કરો</div>
+                    <div class="grid grid-cols-2 gap-2 px-1">
+                        <button onclick="setTheme('light')" class="btn-adv btn-adv-secondary px-3 py-2 text-xs justify-start gap-2">☀️ Light</button>
+                        <button onclick="setTheme('dark')" class="btn-adv btn-adv-secondary px-3 py-2 text-xs justify-start gap-2">🌙 Dark</button>
+                        <button onclick="setTheme('emerald')" class="btn-adv btn-adv-secondary px-3 py-2 text-xs justify-start gap-2">🍃 Emerald</button>
+                        <button onclick="setTheme('sunset')" class="btn-adv btn-adv-secondary px-3 py-2 text-xs justify-start gap-2">🌅 Sunset</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-4 border-t border-[var(--border)] text-xs text-[var(--muted)] flex flex-col gap-1.5">
+                <div class="flex justify-between items-center">
+                    <span>Status: <strong class="text-emerald-500" id="syncStatusIndicator">Auto Live</strong></span>
+                    <button onclick="logoutSession()" class="text-rose-500 font-semibold underline hover:opacity-80 cursor-pointer" data-i18n="btnLogout">લૉગઆઉટ</button>
+                </div>
+            </div>
+        </aside>
+
+        <main class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+            <header class="bg-[var(--header)] border-b border-[var(--border)] px-6 py-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sticky top-0 z-20 shadow-xs">
+                <div>
+                    <h1 id="headerTitle" class="text-xl sm:text-2xl font-bold tracking-tight" data-i18n="headerTitle">એડવાન્સ્ડ સિસ્ટમ ડેશબોર્ડ 📊</h1>
+                    <p id="headerSubtitle" class="text-xs text-[var(--muted)] mt-0.5" data-i18n="headerSub">ત્વરિત જવાબ મૂલ્યાંકન • ક્રમિક અનલોક (સ્ટેજ 1 🎉 ➔ સ્ટેજ 2 🎉) • પ્રશ્ન દીઠ 30 સેકન્ડ</p>
+                </div>
+                <div class="flex items-center gap-3 w-full sm:w-auto flex-wrap">
+                    <div class="relative flex-1 sm:w-56">
+                        <input type="text" id="globalSearch" placeholder="Search books, subjects..." oninput="handleSearch(this.value)" class="w-full bg-[var(--bg)] border border-[var(--border)] rounded-full px-4 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-[var(--primary)] transition" />
+                        <span class="absolute right-3 top-2.5 text-xs text-[var(--muted)]">🔍</span>
+                    </div>
+                    <div id="currentUserBadge" class="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-[var(--primary)]/10 text-[var(--primary)] rounded-full text-xs font-semibold">
+                        👤 <span id="lblCurrentUsername">User</span>
+                    </div>
+                    <button onclick="loadAllData()" class="btn-adv btn-adv-primary px-4 py-2 text-xs shrink-0 flex items-center gap-1">
+                        🔄 <span data-i18n="btnSync">બધો ડેટા લોડ કરો (Sync)</span>
+                    </button>
+                </div>
+            </header>
+
+            <div class="p-4 sm:p-8 flex-1 animate-fade">
+                
+                <section id="view-dashboard" class="space-y-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div class="custom-card p-5 rounded-2xl border flex items-center justify-between">
+                            <div>
+                                <div class="text-xs text-[var(--muted)] font-medium" data-i18n="cardTotalBooks">કુલ પુસ્તકો</div>
+                                <div id="statTotalBooks" class="text-2xl font-bold mt-1">0</div>
+                                <div class="text-[10px] text-emerald-500 mt-1 font-medium">⚡ સક્રિય રેકોર્ડ્સ</div>
+                            </div>
+                            <div class="w-12 h-12 rounded-xl bg-indigo-500/10 flex items-center justify-center text-xl">📚</div>
+                        </div>
+                        <div class="custom-card p-5 rounded-2xl border flex items-center justify-between">
+                            <div>
+                                <div class="text-xs text-[var(--muted)] font-medium" data-i18n="cardTotalMcq">કુલ MCQ પ્રશ્નો</div>
+                                <div id="statTotalMcq" class="text-2xl font-bold mt-1">1000</div>
+                                <div class="text-[10px] text-blue-500 mt-1 font-medium">⚡ ઇન્સ્ટન્ટ મૂલ્યાંકન</div>
+                            </div>
+                            <div class="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center text-xl">✍️</div>
+                        </div>
+                        <div class="custom-card p-5 rounded-2xl border flex items-center justify-between">
+                            <div>
+                                <div class="text-xs text-[var(--muted)] font-medium" data-i18n="cardTotalFav">પ્રિય પુસ્તકો</div>
+                                <div id="statTotalFavorites" class="text-2xl font-bold mt-1">0</div>
+                                <div class="text-[10px] text-purple-500 mt-1 font-medium">⚡ સેવ કરેલ આઇટમ્સ</div>
+                            </div>
+                            <div class="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center text-xl">💜</div>
+                        </div>
+                        <div class="custom-card p-5 rounded-2xl border flex items-center justify-between">
+                            <div>
+                                <div class="text-xs text-[var(--muted)] font-medium" data-i18n="cardTotalResults">પરીક્ષા પરિણામો</div>
+                                <div id="statTotalResults" class="text-2xl font-bold mt-1">0</div>
+                                <div class="text-[10px] text-amber-500 mt-1 font-medium">⚡ લાઈવ સીંક</div>
+                            </div>
+                            <div class="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center text-xl">🏆</div>
+                        </div>
+                    </div>
+
+                    <div class="custom-card p-5 rounded-2xl border bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-pink-500/10">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                            <div class="space-y-1">
+                                <div class="text-xs font-bold uppercase tracking-wider text-[var(--primary)] flex items-center gap-2">
+                                    <span>🎯 ત્વરિત ઉત્તર મૂલ્યાંકન સક્રિય!</span>
+                                </div>
+                                <div class="text-sm font-bold" id="dashboardStageProgressTitle">
+                                    ડાયનેમિક પ્રશ્ન સ્ટેજ લોડ થઈ રહ્યા છે...
+                                </div>
+                                <p class="text-xs text-[var(--muted)]">કોઈપણ ઉત્તર પર ક્લિક કરતાં જ સાચો કે ખોટો જવાબ સાઉન્ડ અને ત્વરિત સોલ્યુશન સાથે દર્શાવાશે!</p>
+                            </div>
+                            <div class="flex gap-2">
+                                <button onclick="switchTab('mcq')" class="btn-adv btn-adv-primary px-5 py-2.5 text-xs font-bold shrink-0">
+                                    MCQ સ્ટેજ પર જાઓ ➔
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div class="custom-card p-6 rounded-2xl border lg:col-span-2 flex flex-col">
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="font-semibold text-sm">કેટેગરી મુજબ પુસ્તકો</h3>
+                                <span class="text-xs text-[var(--muted)]">ઓટોમેટેડ ચાર્ટ</span>
+                            </div>
+                            <div class="relative flex-1 min-h-[280px]">
+                                <canvas id="categoryChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="custom-card p-6 rounded-2xl border flex flex-col">
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="font-semibold text-sm">પ્રિય પુસ્તકોનું પ્રમાણ</h3>
+                                <span class="text-xs text-[var(--muted)]">ગુણોત્તર</span>
+                            </div>
+                            <div class="relative flex-1 min-h-[280px] flex items-center justify-center">
+                                <canvas id="favoriteChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="custom-card p-6 rounded-2xl border">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="font-semibold text-sm">તાજેતરમાં ઉમેરાયેલ પુસ્તકો</h3>
+                            <button onclick="switchTab('books')" class="text-xs font-medium text-[var(--primary)] hover:underline cursor-pointer">બધા જુઓ →</button>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-xs">
+                                <thead class="border-b border-[var(--border)] text-[var(--muted)] uppercase font-semibold">
+                                    <tr>
+                                        <th class="pb-3 px-3">શીર્ષક (Title)</th>
+                                        <th class="pb-3 px-3">લેખક (Author)</th>
+                                        <th class="pb-3 px-3">કેટેગરી (Category)</th>
+                                        <th class="pb-3 px-3 text-right">ક્રિયા (Action)</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recentTableBody" class="divide-y divide-[var(--border)]"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="view-books" class="space-y-6 hidden">
+                    <div class="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3">
+                        <div class="flex gap-2 items-center flex-wrap" id="categoryFilterButtons"></div>
+                    </div>
+                    <div id="booksGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+                </section>
+
+                <section id="view-favorites" class="space-y-6 hidden">
+                    <div id="favoritesGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+                </section>
+
+                <section id="view-mcq" class="space-y-6 hidden">
+                    <div class="custom-card p-6 rounded-2xl border max-w-5xl mx-auto space-y-6">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-[var(--border)]">
+                            <div>
+                                <h2 class="font-bold text-lg flex items-center gap-2">
+                                    <span>MCQ પરીક્ષા સ્ટેજ અને ટેસ્ટ</span>
+                                </h2>
+                                <p class="text-xs text-[var(--muted)]">⚡ ક્લિક પર ત્વરિત સાચા/ખોટા જવાબનું મૂલ્યાંકન સક્રિય</p>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <select id="mcqSubjectSelect" onchange="handleSubjectChange()" class="bg-[var(--bg)] border border-[var(--border)] rounded-xl px-3 py-2 text-xs font-medium focus:outline-none">
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Stage Selection Setup -->
+                        <div id="mcqStudentSetup" class="space-y-5">
+                            <div class="space-y-2">
+                                <div class="flex justify-between items-center">
+                                    <label class="block font-semibold text-xs text-[var(--muted)] uppercase tracking-wider">સ્ટેજ પસંદ કરો (ક્રમિક અનલોક સક્રિય):</label>
+                                    <span class="text-[11px] font-bold text-[var(--primary)]" id="lblTotalStagesSummary">⏱️ પ્રશ્ન દીઠ 30 સેકન્ડ</span>
+                                </div>
+                                <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-3 max-h-[380px] overflow-y-auto p-1 border border-[var(--border)] rounded-2xl bg-[var(--bg)]/50" id="stageCardsGrid">
+                                </div>
+                            </div>
+
+                            <div class="p-4 bg-[var(--bg)] rounded-xl border border-[var(--border)] space-y-3">
+                                <div class="flex justify-between items-center flex-wrap gap-2">
+                                    <label class="block font-semibold text-xs">વિદ્યાર્થીનું નામ ચકાસો:</label>
+                                    <span id="selectedStageInfoBadge" class="px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 font-bold text-xs">Stage 1 Selected</span>
+                                </div>
+                                <div class="flex flex-col sm:flex-row gap-2">
+                                    <input type="text" id="examStudentName" readonly class="flex-1 bg-[var(--card)] border border-[var(--border)] rounded-xl px-3 py-2 text-xs font-semibold focus:outline-none" />
+                                    <button id="startExamBtn" onclick="startExamWithTimer()" class="btn-adv btn-adv-emerald px-6 py-2.5 text-xs font-bold">
+                                        🚀 પરીક્ષા શરૂ કરો
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Active Timed Examination Section with Smart Question Navigator -->
+                        <div id="mcqQuestionsArea" class="hidden space-y-6">
+                            <div class="flex flex-wrap justify-between items-center bg-[var(--bg)] p-3.5 rounded-xl border border-[var(--border)] text-xs font-medium gap-2 shadow-inner">
+                                <span>વિદ્યાર્થી: <strong id="lblExamStudent" class="text-[var(--text)]"></strong></span>
+                                <span>સ્ટેજ: <strong id="lblExamStage" class="text-[var(--text)]"></strong></span>
+                                <span>વિષય: <strong id="lblExamSubject" class="text-[var(--text)]"></strong></span>
+                                <span class="px-3 py-1.5 rounded-lg bg-rose-500/10 text-rose-500 font-bold text-sm flex items-center gap-1">⏱️ બાકી સમય: <span id="examTimerDisplay">50:00</span></span>
+                            </div>
+
+                            <!-- Smart Question Palette Matrix -->
+                            <div class="p-4 bg-[var(--bg)] rounded-xl border border-[var(--border)] space-y-2">
+                                <div class="flex justify-between items-center text-xs flex-wrap gap-2">
+                                    <span class="font-bold flex items-center gap-1">🎯 પ્રશ્ન નેવિગેટર ગ્રીડ:</span>
+                                    <div class="flex items-center gap-3 text-[11px] text-[var(--muted)] flex-wrap">
+                                        <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span> સાચો</span>
+                                        <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-rose-500 inline-block"></span> ખોટો</span>
+                                        <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-amber-500 inline-block"></span> ફ્લેગ કરેલ</span>
+                                        <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-[var(--border)] inline-block"></span> ઉત્તર બાકી</span>
+                                    </div>
+                                </div>
+                                <div id="questionMatrixGrid" class="flex flex-wrap gap-1.5 max-h-[120px] overflow-y-auto p-1 text-center"></div>
+                            </div>
+
+                            <!-- Live Question Container -->
+                            <div id="paginatedQuestionContainer" class="p-6 bg-[var(--bg)] rounded-xl border border-[var(--border)] space-y-4 min-h-[250px]">
+                            </div>
+
+                            <div class="flex flex-col sm:flex-row justify-between items-center gap-3 pt-2">
+                                <div class="flex items-center gap-2 w-full sm:w-auto">
+                                    <button onclick="navigateQuestion(-1)" id="prevQuestionBtn" class="btn-adv btn-adv-secondary px-4 py-2.5 text-xs font-semibold flex-1 sm:flex-initial">
+                                        ← અગાઉનો પ્રશ્ન
+                                    </button>
+                                    <button onclick="toggleFlagQuestion()" id="flagQuestionBtn" class="btn-adv btn-adv-secondary px-3 py-2.5 text-xs font-semibold text-amber-500 border-amber-300">
+                                        🚩 ફ્લેગ કરો
+                                    </button>
+                                    <button onclick="navigateQuestion(1)" id="nextQuestionBtn" class="btn-adv btn-adv-primary px-4 py-2.5 text-xs font-semibold flex-1 sm:flex-initial">
+                                        આગળનો પ્રશ્ન →
+                                    </button>
+                                </div>
+                                <div class="text-xs font-medium text-[var(--muted)]">
+                                    પ્રશ્ન <span id="currentQuestionIndexDisplay" class="font-bold text-[var(--text)]">1</span> / <span id="totalQuestionsCountDisplay" class="font-bold text-[var(--text)]">100</span>
+                                </div>
+                                <button onclick="submitExam(true)" class="btn-adv btn-adv-emerald px-6 py-2.5 text-xs font-semibold w-full sm:w-auto">
+                                    ✅ સ્ટેજ જમા કરો
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Exam Result Screen with Smart Answer Key Review -->
+                        <div id="mcqResultArea" class="hidden text-center space-y-6 py-4 animate-fade">
+                            <div class="space-y-2">
+                                <div class="text-5xl" id="resultEmojiHeader">🎉</div>
+                                <h3 class="text-xl font-bold" id="resultTitleHeader">સ્ટેજ સફળતાપૂર્વક પૂર્ણ થયું!</h3>
+                                <p class="text-xs text-[var(--muted)] max-w-lg mx-auto" id="examScoreSummary"></p>
+                            </div>
+                            
+                            <div class="p-4 bg-[var(--bg)] rounded-xl border border-[var(--border)] max-w-md mx-auto text-xs space-y-2">
+                                <div class="font-bold text-[var(--primary)]" id="unlockedNextStageBadge">આગળનું સ્ટેજ અનલોક થયું 🔥</div>
+                                <p class="text-[var(--muted)]" id="unlockedNextStageDesc">તમારું પરિણામ સીંક થઈ ગયું છે.</p>
+                            </div>
+
+                            <!-- Question Review Breakdown with Smart Filters -->
+                            <div class="text-left space-y-3 pt-4 border-t border-[var(--border)]">
+                                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                                    <h4 class="font-bold text-sm flex items-center gap-2">
+                                        <span>📋 વિગતવાર જવાબોની વિગત (Answer Key)</span>
+                                    </h4>
+                                    <div class="flex items-center gap-1.5 text-xs" id="reviewFilterBtns">
+                                        <button onclick="filterReviewList('ALL')" id="reviewFilterALL" class="btn-adv btn-adv-primary px-2.5 py-1 text-[11px]">બધા</button>
+                                        <button onclick="filterReviewList('CORRECT')" id="reviewFilterCORRECT" class="btn-adv btn-adv-secondary px-2.5 py-1 text-[11px] text-emerald-600">સાચા</button>
+                                        <button onclick="filterReviewList('INCORRECT')" id="reviewFilterINCORRECT" class="btn-adv btn-adv-secondary px-2.5 py-1 text-[11px] text-rose-600">ખોટા</button>
+                                        <button onclick="filterReviewList('UNATTEMPTED')" id="reviewFilterUNATTEMPTED" class="btn-adv btn-adv-secondary px-2.5 py-1 text-[11px] text-amber-600">બાકી રહી ગયેલા</button>
+                                    </div>
+                                </div>
+
+                                <div id="detailedAnswerReviewList" class="space-y-3 max-h-[380px] overflow-y-auto p-3 border border-[var(--border)] rounded-xl bg-[var(--bg)]/50 text-xs">
+                                </div>
+                            </div>
+
+                            <div class="pt-2 flex justify-center gap-3">
+                                <button onclick="resetExamForm()" class="btn-adv btn-adv-primary px-6 py-2.5 text-xs font-bold">
+                                    આગળના સ્ટેજ પર જાઓ ➔
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="view-results" class="space-y-6 hidden">
+                    <div class="custom-card p-6 rounded-2xl border space-y-4">
+                        <div class="flex justify-between items-center flex-wrap gap-2">
+                            <div>
+                                <h2 class="font-bold text-lg">વિદ્યાર્થી પરિણામ લીડરબોર્ડ (Leaderboard)</h2>
+                                <p class="text-xs text-[var(--muted)]">બધા જ સ્ટેજના વિદ્યાર્થીઓના પરિણામોનો સંગ્રહ.</p>
+                            </div>
+                            <button onclick="loadResultsData()" class="btn-adv btn-adv-secondary px-3.5 py-2 text-xs font-medium">🔄 રીફ્રેશ કરો</button>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-xs">
+                                <thead class="border-b border-[var(--border)] text-[var(--muted)] uppercase font-semibold">
+                                    <tr>
+                                        <th class="pb-3 px-3">સમય (Timestamp)</th>
+                                        <th class="pb-3 px-3">વિદ્યાર્થીનું નામ</th>
+                                        <th class="pb-3 px-3">સ્ટેજ / વિષય</th>
+                                        <th class="pb-3 px-3">ગુણ (Score)</th>
+                                        <th class="pb-3 px-3">ચોકસાઈ (Accuracy)</th>
+                                        <th class="pb-3 px-3 text-right">જવાબો ચકાસો</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="resultsTableBody" class="divide-y divide-[var(--border)]"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <div id="pdfModal" class="fixed inset-0 bg-black/70 backdrop-blur-xs z-50 hidden flex items-center justify-center p-3 sm:p-6">
+        <div class="custom-card w-full max-w-5xl h-[90vh] rounded-2xl border flex flex-col overflow-hidden shadow-2xl">
+            <div class="px-5 py-3.5 border-b border-[var(--border)] flex justify-between items-center bg-[var(--header)] shrink-0">
+                <div class="font-semibold text-sm truncate max-w-[65%]" id="modalBookTitle">Document Viewer</div>
+                <div class="flex items-center gap-2">
+                    <a id="modalExternalLink" href="#" target="_blank" class="btn-adv btn-adv-primary px-3.5 py-1.5 text-xs font-medium">નવી ટેબમાં ખોલો ↗</a>
+                    <button onclick="closePdfModal()" class="btn-adv btn-adv-rose px-3.5 py-1.5 text-xs font-medium">બંધ કરો ✕</button>
+                </div>
+            </div>
+            <div class="flex-1 bg-neutral-900 flex items-center justify-center relative overflow-hidden" id="modalContainer">
+                <div id="pdfViewerWrapper" class="w-full h-full flex flex-col"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="reviewModal" class="fixed inset-0 bg-black/70 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+        <div class="custom-card w-full max-w-2xl max-h-[85vh] rounded-2xl border flex flex-col overflow-hidden shadow-2xl animate-fade">
+            <div class="px-5 py-3.5 border-b border-[var(--border)] flex justify-between items-center bg-[var(--header)] shrink-0">
+                <div class="font-bold text-sm" id="reviewModalTitle">પરીક્ષા ઉત્તરોનું પૃથક્કરણ</div>
+                <button onclick="closeReviewModal()" class="btn-adv btn-adv-secondary px-3 py-1 text-xs">બંધ કરો ✕</button>
+            </div>
+            <div id="reviewModalBody" class="p-5 overflow-y-auto space-y-3 text-xs flex-1">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = "https://script.google.com/macros/s/AKfycbzk0B7ATEWKu_T-vHyj-2agONJRg7ttGsPVwIA8-LqZTwcZ9b-0KWa6266t82gDv6SGiw/exec";
+
+        let currentLang = localStorage.getItem('jgv_lang') || 'gu';
+
+        const i18n = {
+            gu: {
+                loaderHeading: "બધો ડેટા લોડ થઈ રહ્યો છે...",
+                loaderSubheading: "લાઈવ સીંક અને પુસ્તકો લોડ થઈ રહ્યા છે, કૃપા કરીને થોડી પ્રતીક્ષા કરો.",
+                navHome: "🏠 હોમ પેજ",
+                navTools: "🧰 ઓલ ઇન વન ટૂલ્સ",
+                navServices: "🌐 અન્ય સેવાઓ",
+                lblLanguage: "🌐 ભાષા / Language:",
+                loginTitle: "વિદ્યાર્થી પોર્ટલ લોગીન",
+                loginSub: "કડક નીતિ: પ્રતિ જીમેઇલ સરનામે માત્ર એક જ એકાઉન્ટ માન્ય રહેશે",
+                lblUsername: "યુઝરનેમ / સ્ટુડન્ટ આઈડી",
+                lblPassword: "પાસવર્ડ",
+                btnForgot: "પાસવર્ડ ભૂલી ગયા?",
+                btnLoginSubmit: "પોર્ટલમાં લોગીન કરો",
+                btnRegisterSwitch: "એકાઉન્ટ નથી? જીમેઇલ સાથે નોંધણી કરો →",
+                btnLogout: "લૉગઆઉટ",
+                navTitle: "નેવિગેશન મોડ્યુલ્સ",
+                tabDashboard: "સિસ્ટમ ડેશબોર્ડ",
+                tabBooks: "ઓટોમેટેડ લાઇબ્રેરી",
+                tabFavorites: "પ્રિય પુસ્તકો (Favorites)",
+                tabMcq: "MCQ પરીક્ષા સ્ટેજ",
+                tabResults: "પરીક્ષા પરિણામ લીડરબોર્ડ",
+                lblAudioTitle: "સાઉન્ડ અને ટોન (અવાજ)",
+                lblAudioActive: "અવાજ સક્રિય",
+                lblAudioPreset: "ટોન શૈલી પસંદ કરો",
+                btnTestSound: "🔊 અવાજ ટેસ્ટ કરો",
+                lblThemeTitle: "થીમ પસંદ કરો",
+                headerTitle: "એડવાન્સ્ડ સિસ્ટમ ડેશબોર્ડ 📊",
+                headerSub: "ત્વરિત જવાબ મૂલ્યાંકન • ક્રમિક અનલોક (સ્ટેજ 1 🎉 ➔ સ્ટેજ 2 🎉) • પ્રશ્ન દીઠ 30 સેકન્ડ",
+                btnSync: "બધો ડેટા લોડ કરો (Sync)",
+                cardTotalBooks: "કુલ પુસ્તકો",
+                cardTotalMcq: "કુલ MCQ પ્રશ્નો",
+                cardTotalFav: "પ્રિય પુસ્તકો",
+                cardTotalResults: "પરીક્ષા પરિણામો"
+            },
+            hi: {
+                loaderHeading: "सभी डेटा लोड हो रहा है...",
+                loaderSubheading: "लाइव सिंक और पुस्तकें लोड हो रही हैं, कृपया प्रतीक्षा करें।",
+                navHome: "🏠 होम पेज",
+                navTools: "🧰 ऑल इन वन टूल्स",
+                navServices: "🌐 अन्य सेवाएं",
+                lblLanguage: "🌐 भाषा / Language:",
+                loginTitle: "छात्र पोर्टल लॉगिन",
+                loginSub: "सख्त नीति: प्रति जीमेल आईडी केवल एक खाता अनुमत है",
+                lblUsername: "उपयोगकर्ता नाम / छात्र आईडी",
+                lblPassword: "पासवर्ड",
+                btnForgot: "पासवर्ड भूल गए?",
+                btnLoginSubmit: "पोर्टल में लॉगिन करें",
+                btnRegisterSwitch: "खाता नहीं है? जीमेल से पंजीकरण करें →",
+                btnLogout: "लॉग आउट",
+                navTitle: "नेविगेशन मॉड्यूल",
+                tabDashboard: "सिस्टम डैशबोर्ड",
+                tabBooks: "ऑटोमेटेड लाइब्रेरी",
+                tabFavorites: "पसंदीदा पुस्तकें",
+                tabMcq: "MCQ परीक्षा स्टेज",
+                tabResults: "परीक्षा परिणाम लीडरबोर्ड",
+                lblAudioTitle: "ध्वनि और टोन (ऑडियो)",
+                lblAudioActive: "ध्वनि सक्रिय",
+                lblAudioPreset: "टोन शैली चुनें",
+                btnTestSound: "🔊 ध्वनि परीक्षण करें",
+                lblThemeTitle: "थीम चुनें",
+                headerTitle: "उन्नत सिस्टम डैशबोर्ड 📊",
+                headerSub: "त्वरित उत्तर मूल्यांकन • क्रमिक अनलॉक (स्टेज 1 🎉 ➔ स्टेज 2 🎉) • 30 सेकंड प्रति प्रश्न",
+                btnSync: "सभी डेटा लोड करें (Sync)",
+                cardTotalBooks: "कुल पुस्तकें",
+                cardTotalMcq: "कुल MCQ प्रश्न",
+                cardTotalFav: "पसंदीदा पुस्तकें",
+                cardTotalResults: "परीक्षा परिणाम"
+            },
+            en: {
+                loaderHeading: "Loading All System Data...",
+                loaderSubheading: "Syncing live records and library materials, please wait...",
+                navHome: "🏠 Home Page",
+                navTools: "🧰 All in One Tools",
+                navServices: "🌐 Other Services",
+                lblLanguage: "🌐 Language:",
+                loginTitle: "Student Portal Login",
+                loginSub: "Strict Policy: Exactly ONE account permitted per Gmail address",
+                lblUsername: "Username / Student ID",
+                lblPassword: "Password",
+                btnForgot: "Forgot Password?",
+                btnLoginSubmit: "Login to Portal",
+                btnRegisterSwitch: "Don't have an account? Register with Gmail →",
+                btnLogout: "Logout",
+                navTitle: "Navigation Modules",
+                tabDashboard: "System Dashboard",
+                tabBooks: "Automated Library Catalog",
+                tabFavorites: "Starred Favorites Vault",
+                tabMcq: "Progressive MCQ Stages",
+                tabResults: "Student Exam Leaderboard",
+                lblAudioTitle: "Sound & Audio Tone",
+                lblAudioActive: "Audio Tones Active",
+                lblAudioPreset: "Tone Preset Style",
+                btnTestSound: "🔊 Test Sound Tone",
+                lblThemeTitle: "Visual Theme",
+                headerTitle: "Advanced System Dashboard 📊",
+                headerSub: "Instant Answer Evaluation • Sequential Unlock (Stage 1 🎉 ➔ Stage 2 🎉) • 30s per Question",
+                btnSync: "Sync & Reload All Data",
+                cardTotalBooks: "Library Books",
+                cardTotalMcq: "MCQ Question Pool",
+                cardTotalFav: "Favorites Vault",
+                cardTotalResults: "Student Exam Logs"
+            }
+        };
+
+        function applyLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('jgv_lang', lang);
+            document.documentElement.lang = lang;
+
+            const langSelect = document.getElementById('languageSelect');
+            if (langSelect) langSelect.value = lang;
+
+            const t = i18n[lang] || i18n['gu'];
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (t[key]) {
+                    el.textContent = t[key];
+                }
+            });
+        }
+
+        function changeLanguage(lang) {
+            applyLanguage(lang);
+            playAudioTone('click');
+            showToast(`Language changed to ${lang === 'gu' ? 'ગુજરાતી' : lang === 'hi' ? 'हिन्दी' : 'English'}`, 'info');
+        }
+
+        function showLoader() {
+            const loader = document.getElementById('globalLoader');
+            if (loader) {
+                loader.classList.remove('hidden');
+                loader.style.opacity = '1';
+            }
+        }
+
+        function hideLoader() {
+            const loader = document.getElementById('globalLoader');
+            if (loader) {
+                loader.style.opacity = '0';
+                setTimeout(() => {
+                    loader.classList.add('hidden');
+                }, 300);
+            }
+        }
+
+        let libraryBooks = [];
+        let rawMcqQuestions = [];
+        let examQuestions = [];
+        let examResults = JSON.parse(localStorage.getItem('jgv_local_results') || "[]");
+        let availableSubjects = [];
+        let currentCategoryFilter = '';
+        let currentSearchQuery = '';
+        let currentSelectedSubject = '';
+        let categoryChartInstance = null;
+        let favoriteChartInstance = null;
+        
+        let currentStudentAnswers = {};
+        let flaggedQuestions = {};
+        let selectedStage = 1;
+        let activeQuestionIndex = 0;
+        let activeReviewFilter = 'ALL';
+        let currentSubmittedExamReviewData = null;
+        
+        let clientIpAddress = "hidden_ip_secure_token";
+        let activeSessionUser = localStorage.getItem('jgv_active_user') || null;
+        
+        let pendingAuthData = null;
+        let generatedOtpCode = "488554";
+        let examTimerInterval = null;
+        let examTimeRemainingSeconds = 3000;
+
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            if (!container) return;
+
+            const toast = document.createElement('div');
+            toast.className = `p-3.5 rounded-xl border text-xs font-medium shadow-lg backdrop-blur-md flex items-center gap-2 transition-all duration-300 transform translate-y-2 opacity-0 pointer-events-auto ${
+                type === 'error' ? 'bg-rose-500/90 text-white border-rose-600' :
+                type === 'success' ? 'bg-emerald-500/90 text-white border-emerald-600' :
+                'bg-[var(--card)] text-[var(--text)] border-[var(--border)]'
+            }`;
+
+            const icon = type === 'error' ? '❌' : type === 'success' ? '✅' : 'ℹ️';
+            toast.innerHTML = `<span>${icon}</span><span class="flex-1">${message}</span>`;
+
+            container.appendChild(toast);
+
+            requestAnimationFrame(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            });
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        function showCustomConfirm(title, message, onConfirm) {
+            const modal = document.getElementById('customConfirmModal');
+            const titleEl = document.getElementById('confirmModalTitle');
+            const descEl = document.getElementById('confirmModalDesc');
+            const okBtn = document.getElementById('confirmOkBtn');
+            const cancelBtn = document.getElementById('confirmCancelBtn');
+
+            if (!modal) {
+                if (window.confirm(message)) onConfirm();
+                return;
+            }
+
+            titleEl.textContent = title;
+            descEl.textContent = message;
+
+            modal.classList.remove('hidden');
+
+            const handleOk = () => {
+                cleanup();
+                onConfirm();
+            };
+
+            const handleCancel = () => {
+                cleanup();
+            };
+
+            const cleanup = () => {
+                modal.classList.add('hidden');
+                okBtn.removeEventListener('click', handleOk);
+                cancelBtn.removeEventListener('click', handleCancel);
+            };
+
+            okBtn.addEventListener('click', handleOk);
+            cancelBtn.addEventListener('click', handleCancel);
+        }
+
+        function getCompletedStagesKey() {
+            const user = activeSessionUser || 'guest';
+            return `jgv_completed_stages_${user}`;
+        }
+
+        function getCompletedStages() {
+            const data = localStorage.getItem(getCompletedStagesKey());
+            return data ? JSON.parse(data) : [];
+        }
+
+        function markStageCompleted(stageNum) {
+            let completed = getCompletedStages();
+            if (!completed.includes(stageNum)) {
+                completed.push(stageNum);
+                localStorage.setItem(getCompletedStagesKey(), JSON.stringify(completed));
+            }
+        }
+
+        function getTotalStages() {
+            const totalQuestions = examQuestions.length || 1000;
+            return Math.max(1, Math.ceil(totalQuestions / 100));
+        }
+
+        function getHighestUnlockedStage() {
+            const completed = getCompletedStages();
+            const totalStages = getTotalStages();
+            if (completed.length === 0) return 1;
+            const maxCompleted = Math.max(...completed);
+            return Math.min(maxCompleted + 1, totalStages);
+        }
+
+        let audioCtx = null;
+
+        function getAudioContext() {
+            if (!audioCtx) {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (AudioContext) {
+                    audioCtx = new AudioContext();
+                }
+            }
+            if (audioCtx && audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            return audioCtx;
+        }
+
+        function playAudioTone(type) {
+            const enabledCheckbox = document.getElementById('audioToneEnabled');
+            if (enabledCheckbox && !enabledCheckbox.checked) return;
+
+            const styleSelect = document.getElementById('audioToneStyle');
+            const style = styleSelect ? styleSelect.value : 'pleasant';
+
+            try {
+                const ctx = getAudioContext();
+                if (!ctx) return;
+
+                const now = ctx.currentTime;
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                if (style === 'pleasant') {
+                    if (type === 'correct') {
+                        osc.type = 'sine';
+                        osc.frequency.setValueAtTime(523.25, now);
+                        osc.frequency.setValueAtTime(659.25, now + 0.1);
+                        osc.frequency.setValueAtTime(783.99, now + 0.2);
+                        gain.gain.setValueAtTime(0.15, now);
+                        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+                        osc.start(now);
+                        osc.stop(now + 0.5);
+                    } else if (type === 'incorrect') {
+                        osc.type = 'sawtooth';
+                        osc.frequency.setValueAtTime(220, now);
+                        osc.frequency.setValueAtTime(185, now + 0.15);
+                        gain.gain.setValueAtTime(0.15, now);
+                        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+                        osc.start(now);
+                        osc.stop(now + 0.4);
+                    } else {
+                        osc.type = 'sine';
+                        osc.frequency.setValueAtTime(440, now);
+                        gain.gain.setValueAtTime(0.1, now);
+                        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+                        osc.start(now);
+                        osc.stop(now + 0.2);
+                    }
+                } else if (style === 'arcade') {
+                    if (type === 'correct') {
+                        osc.type = 'square';
+                        osc.frequency.setValueAtTime(440, now);
+                        osc.frequency.setValueAtTime(880, now + 0.1);
+                        gain.gain.setValueAtTime(0.1, now);
+                        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+                        osc.start(now);
+                        osc.stop(now + 0.3);
+                    } else if (type === 'incorrect') {
+                        osc.type = 'sawtooth';
+                        osc.frequency.setValueAtTime(150, now);
+                        osc.frequency.setValueAtTime(100, now + 0.15);
+                        gain.gain.setValueAtTime(0.12, now);
+                        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+                        osc.start(now);
+                        osc.stop(now + 0.3);
+                    } else {
+                        osc.type = 'square';
+                        osc.frequency.setValueAtTime(300, now);
+                        gain.gain.setValueAtTime(0.08, now);
+                        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+                        osc.start(now);
+                        osc.stop(now + 0.15);
+                    }
+                } else if (style === 'chime') {
+                    if (type === 'correct') {
+                        osc.type = 'triangle';
+                        osc.frequency.setValueAtTime(587.33, now);
+                        osc.frequency.setValueAtTime(880, now + 0.12);
+                        gain.gain.setValueAtTime(0.18, now);
+                        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
+                        osc.start(now);
+                        osc.stop(now + 0.6);
+                    } else if (type === 'incorrect') {
+                        osc.type = 'triangle';
+                        osc.frequency.setValueAtTime(246.94, now);
+                        osc.frequency.setValueAtTime(220, now + 0.15);
+                        gain.gain.setValueAtTime(0.18, now);
+                        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+                        osc.start(now);
+                        osc.stop(now + 0.5);
+                    } else {
+                        osc.type = 'triangle';
+                        osc.frequency.setValueAtTime(500, now);
+                        gain.gain.setValueAtTime(0.1, now);
+                        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+                        osc.start(now);
+                        osc.stop(now + 0.2);
+                    }
+                } else {
+                    if (type === 'correct') {
+                        osc.type = 'sine';
+                        osc.frequency.setValueAtTime(750, now);
+                        gain.gain.setValueAtTime(0.1, now);
+                        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+                        osc.start(now);
+                        osc.stop(now + 0.2);
+                    } else if (type === 'incorrect') {
+                        osc.type = 'sawtooth';
+                        osc.frequency.setValueAtTime(200, now);
+                        gain.gain.setValueAtTime(0.1, now);
+                        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+                        osc.start(now);
+                        osc.stop(now + 0.25);
+                    } else {
+                        osc.type = 'sine';
+                        osc.frequency.setValueAtTime(400, now);
+                        gain.gain.setValueAtTime(0.08, now);
+                        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+                        osc.start(now);
+                        osc.stop(now + 0.1);
+                    }
+                }
+            } catch (e) {
+                console.log("Audio Tone playback exception:", e);
+            }
+        }
+
+        function playAudioToneTest() {
+            playAudioTone('correct');
+            showToast("Playing test audio tone preset!", "success");
+        }
+
+        fetch('https://api.ipify.org?format=json')
+            .then(res => res.json())
+            .then(data => {
+                clientIpAddress = "ip_hash_" + btoa(data.ip).substring(0, 10);
+                const hiddenIpEl = document.getElementById('hiddenClientIp');
+                if (hiddenIpEl) hiddenIpEl.value = clientIpAddress;
+            })
+            .catch(() => {
+                clientIpAddress = "ip_hash_local_" + Math.floor(Math.random() * 90000 + 10000);
+                const hiddenIpEl = document.getElementById('hiddenClientIp');
+                if (hiddenIpEl) hiddenIpEl.value = clientIpAddress;
+            });
+
+        window.addEventListener('DOMContentLoaded', () => {
+            applyLanguage(currentLang);
+            if (activeSessionUser) {
+                document.getElementById('loginModal').classList.add('hidden');
+                document.getElementById('lblCurrentUsername').textContent = activeSessionUser;
+                const examNameInput = document.getElementById('examStudentName');
+                if (examNameInput) examNameInput.value = activeSessionUser;
+            } else {
+                document.getElementById('loginModal').classList.remove('hidden');
+            }
+            loadAllData();
+        });
+
+        function getStageConfig(stageNum) {
+            const totalQuestions = examQuestions.length || 1000;
+            const startQ = (stageNum - 1) * 100 + 1;
+            const endQ = Math.min(stageNum * 100, totalQuestions);
+            const questionCount = Math.max(0, endQ - startQ + 1);
+            const durationSeconds = questionCount * 30;
+            const durationMins = Math.floor(durationSeconds / 60);
+            return { questionCount, durationSeconds, durationMins, startQ, endQ, totalQuestions };
+        }
+
+        function renderStageCards() {
+            const grid = document.getElementById('stageCardsGrid');
+            if (!grid) return;
+            grid.innerHTML = '';
+
+            const completedStages = getCompletedStages();
+            const totalStages = getTotalStages();
+            const highestUnlocked = getHighestUnlockedStage();
+
+            const titleBanner = document.getElementById('dashboardStageProgressTitle');
+            if (titleBanner) {
+                let progressString = "";
+                for (let i = 1; i < highestUnlocked; i++) {
+                    const c = getStageConfig(i);
+                    progressString += `Stage ${i} (Q${c.startQ}–${c.endQ}) finished 🎉 ➔ `;
+                }
+                if (highestUnlocked <= totalStages) {
+                    const conf = getStageConfig(highestUnlocked);
+                    progressString += `Stage ${highestUnlocked} (Q${conf.startQ}–${conf.endQ}) 🔥 Ready (Total: ${totalStages} Stages Available)`;
+                } else {
+                    progressString += `All ${totalStages} Stages Completed! 🏆`;
+                }
+                titleBanner.textContent = progressString;
+            }
+
+            const totalSummaryLabel = document.getElementById('lblTotalStagesSummary');
+            if (totalSummaryLabel) {
+                totalSummaryLabel.textContent = `⏱️ Fixed 30s / Q • ${totalStages} Dynamic Stages Available (${examQuestions.length || 1000} Qs Pool)`;
+            }
+
+            if (selectedStage > totalStages) {
+                selectedStage = totalStages;
+            }
+
+            for (let s = 1; s <= totalStages; s++) {
+                const config = getStageConfig(s);
+                const isCompleted = completedStages.includes(s);
+                const isUnlocked = s <= highestUnlocked;
+                const isSelected = (selectedStage === s);
+
+                const card = document.createElement('div');
+                card.id = `stageCard_${s}`;
+                
+                let borderStyle = 'border-[var(--border)] bg-[var(--card)]';
+                let statusBadge = '';
+
+                if (isCompleted) {
+                    borderStyle = 'border-emerald-500 bg-emerald-500/10';
+                    statusBadge = `<div class="text-[10px] font-bold text-emerald-600 mt-1">Stage ${s} finished 🎉</div>`;
+                } else if (s === highestUnlocked) {
+                    borderStyle = 'border-amber-500 bg-amber-500/10 shadow-sm';
+                    statusBadge = `<div class="text-[10px] font-bold text-amber-600 mt-1">Stage ${s} Active 🔥</div>`;
+                } else {
+                    borderStyle = 'border-[var(--border)] bg-[var(--bg)] opacity-60';
+                    statusBadge = `<div class="text-[10px] font-medium text-[var(--muted)] mt-1">🔒 Stage ${s-1} Required</div>`;
+                }
+
+                if (isSelected) {
+                    borderStyle += ' ring-2 ring-[var(--primary)]';
+                }
+
+                card.className = `p-3 rounded-xl border-2 transition space-y-1 text-center ${borderStyle} ${isUnlocked ? 'cursor-pointer hover:scale-102' : 'cursor-not-allowed'}`;
+                
+                card.onclick = () => {
+                    if (!isUnlocked) {
+                        playAudioTone('incorrect');
+                        showToast(`🔒 Stage ${s} is locked! Complete Stage ${s-1} first.`, 'error');
+                        return;
+                    }
+                    selectedStage = s;
+                    playAudioTone('click');
+                    renderStageCards();
+                    const badge = document.getElementById('selectedStageInfoBadge');
+                    if (badge) badge.textContent = `Stage ${s} Selected (Q${config.startQ}–${config.endQ} • ${config.questionCount} Qs • ${config.durationMins} Mins)`;
+                };
+
+                card.innerHTML = `
+                    <div class="text-[11px] font-bold uppercase tracking-wider ${isSelected ? 'text-[var(--primary)]' : 'text-[var(--muted)]'}">Stage ${s}</div>
+                    <div class="text-xs font-bold">Qs ${config.startQ}–${config.endQ}</div>
+                    <div class="text-[10px] text-[var(--muted)]">⏱️ ${config.durationMins} Mins (30s/Q)</div>
+                    ${statusBadge}
+                `;
+                grid.appendChild(card);
+            }
+
+            const badge = document.getElementById('selectedStageInfoBadge');
+            if (badge) {
+                const conf = getStageConfig(selectedStage);
+                badge.textContent = `Stage ${selectedStage} Selected (Q${conf.startQ}–${conf.endQ} • ${conf.questionCount} Qs • ${conf.durationMins} Mins)`;
+            }
+        }
+
+        function switchAuthMode(mode) {
+            playAudioTone('click');
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            const forgotForm = document.getElementById('forgotForm');
+            const otpSection = document.getElementById('otpFormSection');
+            const titleEl = document.getElementById('authModalTitle');
+            const subEl = document.getElementById('authModalSub');
+
+            loginForm.classList.add('hidden');
+            registerForm.classList.add('hidden');
+            forgotForm.classList.add('hidden');
+            otpSection.classList.add('hidden');
+
+            if (mode === 'register') {
+                registerForm.classList.remove('hidden');
+                titleEl.textContent = "Student Account Registration";
+                subEl.textContent = "Strict Policy: Exactly ONE account permitted per Gmail address";
+            } else if (mode === 'forgot') {
+                forgotForm.classList.remove('hidden');
+                titleEl.textContent = "Reset Password";
+                subEl.textContent = "Enter your verified Gmail account and new password";
+            } else {
+                loginForm.classList.remove('hidden');
+                titleEl.textContent = "Student Portal Login";
+                subEl.textContent = "Strict Policy: Exactly ONE account permitted per Gmail address";
+            }
+        }
+
+        function handleLoginSubmit(e) {
+            e.preventDefault();
+            playAudioTone('click');
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value.trim();
+            const errorEl = document.getElementById('loginErrorMsg');
+
+            if (!username || !password) {
+                errorEl.textContent = "Please enter both username and password.";
+                errorEl.classList.remove('hidden');
+                return;
+            }
+
+            const existingActiveIP = localStorage.getItem('jgv_ip_' + clientIpAddress);
+            if (existingActiveIP && existingActiveIP !== username) {
+                errorEl.textContent = `Security Restriction: This IP terminal is currently bound to '${existingActiveIP}'. Only one session per IP is permitted!`;
+                errorEl.classList.remove('hidden');
+                return;
+            }
+
+            let registeredUsers = JSON.parse(localStorage.getItem('jgv_registered_users') || "{}");
+            if (!registeredUsers[username]) {
+                errorEl.textContent = "Account not found. Please register first with your Gmail address.";
+                errorEl.classList.remove('hidden');
+                return;
+            }
+
+            if (registeredUsers[username].password !== password) {
+                errorEl.textContent = "Incorrect password. Please try again.";
+                errorEl.classList.remove('hidden');
+                return;
+            }
+
+            const email = registeredUsers[username]?.email || (username + "@gmail.com");
+            pendingAuthData = { username, email, type: 'login' };
+
+            if (registeredUsers[username].isVerified) {
+                completeUserAuthentication(username);
+            } else {
+                triggerGmailOtp(email);
+            }
+        }
+
+        function handleRegisterSubmit(e) {
+            e.preventDefault();
+            playAudioTone('click');
+            const username = document.getElementById('regUsername').value.trim();
+            const email = document.getElementById('regEmail').value.trim().toLowerCase();
+            const password = document.getElementById('regPassword').value.trim();
+            const errorEl = document.getElementById('regErrorMsg');
+
+            if (!username || !email || !password) {
+                errorEl.textContent = "All fields are required.";
+                errorEl.classList.remove('hidden');
+                return;
+            }
+
+            if (!email.endsWith('@gmail.com')) {
+                errorEl.textContent = "Error: Only valid @gmail.com accounts are accepted.";
+                errorEl.classList.remove('hidden');
+                return;
+            }
+
+            let registeredUsers = JSON.parse(localStorage.getItem('jgv_registered_users') || "{}");
+
+            for (const key in registeredUsers) {
+                if (registeredUsers[key].email.toLowerCase() === email) {
+                    errorEl.textContent = `Registration Rejected: Gmail '${email}' already registered to user '${key}'. Only one account per Gmail allowed!`;
+                    errorEl.classList.remove('hidden');
+                    return;
+                }
+            }
+
+            if (registeredUsers[username]) {
+                errorEl.textContent = "Username already exists. Please choose a different username.";
+                errorEl.classList.remove('hidden');
+                return;
+            }
+
+            registeredUsers[username] = { username, email, password, isVerified: false };
+            localStorage.setItem('jgv_registered_users', JSON.stringify(registeredUsers));
+
+            pendingAuthData = { username, email, type: 'register' };
+            triggerGmailOtp(email);
+        }
+
+        function handleForgotSubmit(e) {
+            e.preventDefault();
+            playAudioTone('click');
+            const email = document.getElementById('forgotEmail').value.trim().toLowerCase();
+            const newPassword = document.getElementById('newResetPassword').value.trim();
+            const errorEl = document.getElementById('forgotErrorMsg');
+            const successEl = document.getElementById('forgotSuccessMsg');
+
+            let registeredUsers = JSON.parse(localStorage.getItem('jgv_registered_users') || "{}");
+            let foundUserKey = null;
+            for (const key in registeredUsers) {
+                if (registeredUsers[key].email.toLowerCase() === email) {
+                    foundUserKey = key;
+                    break;
+                }
+            }
+
+            if (!foundUserKey) {
+                errorEl.textContent = "No account found with this Gmail address.";
+                errorEl.classList.remove('hidden');
+                successEl.classList.add('hidden');
+                return;
+            }
+
+            registeredUsers[foundUserKey].password = newPassword;
+            localStorage.setItem('jgv_registered_users', JSON.stringify(registeredUsers));
+
+            successEl.textContent = "Password successfully reset! Redirecting to login...";
+            successEl.classList.remove('hidden');
+            errorEl.classList.add('hidden');
+
+            setTimeout(() => {
+                switchAuthMode('login');
+            }, 2000);
+        }
+
+        function triggerGmailOtp(email) {
+            generatedOtpCode = Math.floor(100000 + Math.random() * 900000).toString();
+            
+            document.getElementById('loginForm').classList.add('hidden');
+            document.getElementById('registerForm').classList.add('hidden');
+            document.getElementById('forgotForm').classList.add('hidden');
+            document.getElementById('otpFormSection').classList.remove('hidden');
+            document.getElementById('authModalTitle').textContent = "Gmail Account Verification & OTP";
+            document.getElementById('authModalSub').textContent = `Enter verification code dispatched via Gmail to ${email}`;
+
+            showToast("OTP Code dispatched to " + email, "success");
+            fetch(`${API_URL}?action=sendOtp&email=${encodeURIComponent(email)}&otp=${generatedOtpCode}`).catch(err => console.log(err));
+        }
+
+        function resendOtpCode() {
+            playAudioTone('click');
+            if (pendingAuthData && pendingAuthData.email) {
+                triggerGmailOtp(pendingAuthData.email);
+            }
+        }
+
+        function completeUserAuthentication(username) {
+            playAudioTone('correct');
+            localStorage.setItem('jgv_active_user', username);
+            localStorage.setItem('jgv_ip_' + clientIpAddress, username);
+            activeSessionUser = username;
+
+            document.getElementById('loginModal').classList.add('hidden');
+            document.getElementById('lblCurrentUsername').textContent = username;
+            const examNameInput = document.getElementById('examStudentName');
+            if (examNameInput) examNameInput.value = username;
+
+            selectedStage = Math.min(getTotalStages(), getHighestUnlockedStage());
+            renderStageCards();
+            showToast(`Welcome, ${username}! Authenticated successfully.`, "success");
+        }
+
+        function verifyOtpAndAuthenticate() {
+            const entered = document.getElementById('enteredOtpCode').value.trim();
+            const errorEl = document.getElementById('otpErrorMsg');
+
+            if (entered !== generatedOtpCode) {
+                playAudioTone('incorrect');
+                errorEl.textContent = "Invalid OTP code. Please check your Gmail message.";
+                errorEl.classList.remove('hidden');
+                return;
+            }
+
+            const username = pendingAuthData ? pendingAuthData.username : "student_user";
+
+            let registeredUsers = JSON.parse(localStorage.getItem('jgv_registered_users') || "{}");
+            if (registeredUsers[username]) {
+                registeredUsers[username].isVerified = true;
+                localStorage.setItem('jgv_registered_users', JSON.stringify(registeredUsers));
+            }
+
+            completeUserAuthentication(username);
+        }
+
+        function logoutSession() {
+            playAudioTone('click');
+            showCustomConfirm("Logout Confirmation", "Are you sure you want to log out of your session?", () => {
+                localStorage.removeItem('jgv_active_user');
+                localStorage.removeItem('jgv_ip_' + clientIpAddress);
+                activeSessionUser = null;
+                window.location.reload();
+            });
+        }
+
+        function setTheme(themeName) {
+            playAudioTone('click');
+            document.documentElement.setAttribute('data-theme', themeName);
+            localStorage.setItem('jgv_theme', themeName);
+            updateChartsTheme();
+            showToast(`Theme switched to ${themeName.toUpperCase()}`, "info");
+        }
+
+        const savedTheme = localStorage.getItem('jgv_theme') || 'light';
+        setTheme(savedTheme);
+
+        function toggleMobileSidebar() {
+            playAudioTone('click');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        }
+
+        function switchTab(tabId) {
+            playAudioTone('click');
+            ['dashboard', 'books', 'favorites', 'mcq', 'results'].forEach(id => {
+                const el = document.getElementById('view-' + id);
+                if (el) el.classList.add('hidden');
+                const nav = document.getElementById('nav-' + id);
+                if (nav) {
+                    nav.className = "btn-adv btn-adv-secondary w-full justify-start px-3.5 py-2.5 text-xs gap-3";
+                }
+            });
+
+            const targetEl = document.getElementById('view-' + tabId);
+            if (targetEl) targetEl.classList.remove('hidden');
+            
+            const targetNav = document.getElementById('nav-' + tabId);
+            if (targetNav) {
+                targetNav.className = "btn-adv btn-adv-primary w-full justify-start px-3.5 py-2.5 text-xs gap-3";
+            }
+
+            if (window.innerWidth < 768) {
+                const sidebar = document.getElementById('sidebar');
+                const overlay = document.getElementById('sidebarOverlay');
+                if (!sidebar.classList.contains('-translate-x-full')) {
+                    sidebar.classList.add('-translate-x-full');
+                    overlay.classList.add('hidden');
+                }
+            }
+
+            if (tabId === 'dashboard') {
+                document.getElementById('headerTitle').textContent = i18n[currentLang]?.headerTitle || 'એડવાન્સ્ડ સિસ્ટમ ડેશબોર્ડ 📊';
+                document.getElementById('headerSubtitle').textContent = i18n[currentLang]?.headerSub || 'ત્વરિત જવાબ મૂલ્યાંકન • ક્રમિક અનલોક (સ્ટેજ 1 🎉 ➔ સ્ટેજ 2 🎉 ...)';
+            } else if (tabId === 'books') {
+                document.getElementById('headerTitle').textContent = 'Automated Library Catalog 📖';
+                document.getElementById('headerSubtitle').textContent = 'Explore library documents synced from Google Sheets';
+                renderBooksGrid();
+            } else if (tabId === 'favorites') {
+                document.getElementById('headerTitle').textContent = 'Starred Favorites Vault 💜';
+                document.getElementById('headerSubtitle').textContent = 'Your curated materials list';
+                renderFavoritesGrid();
+            } else if (tabId === 'mcq') {
+                document.getElementById('headerTitle').textContent = 'Progressive MCQ Stages (30s / Question) ✍️';
+                document.getElementById('headerSubtitle').textContent = '⚡ Instant Answer Evaluation on Click • Complete stages sequentially';
+                renderStageCards();
+                loadSubjectsAndMcq();
+            } else if (tabId === 'results') {
+                document.getElementById('headerTitle').textContent = 'Student Exam Leaderboard (Local Storage + Sheets) 🏆';
+                document.getElementById('headerSubtitle').textContent = 'Persistent student exam records across all dynamic stages';
+                loadResultsData();
+            }
+        }
+
+        function normalizeBook(item) {
+            const out = { ...item };
+            const map = {};
+            for (const key in item) {
+                map[key.toLowerCase()] = item[key];
+            }
+            out._lc = map;
+            return out;
+        }
+
+        function normalizeQuestion(q, index) {
+            const map = {};
+            for (const key in q) {
+                map[key.toLowerCase().trim()] = q[key];
+            }
+            
+            const qText = map['question'] || map['question_text'] || map['q'] || `Question ${index + 1}`;
+            const optA = map['optiona'] || map['option_a'] || map['a'] || map['opt_a'] || '';
+            const optB = map['optionb'] || map['option_b'] || map['b'] || map['opt_b'] || '';
+            const optC = map['optionc'] || map['option_c'] || map['c'] || map['opt_c'] || '';
+            const optD = map['optiond'] || map['option_d'] || map['d'] || map['opt_d'] || '';
+            
+            let rawCorrect = map['correctindex'] !== undefined ? map['correctindex'] : (map['correct_index'] !== undefined ? map['correct_index'] : (map['correct_answer'] || map['correct_option'] || map['correct'] || map['ans'] || map['answer'] || '0'));
+            
+            let correctKey = 'A';
+            const strRaw = String(rawCorrect).trim();
+            if (strRaw === '0') correctKey = 'A';
+            else if (strRaw === '1') correctKey = 'B';
+            else if (strRaw === '2') correctKey = 'C';
+            else if (strRaw === '3') correctKey = 'D';
+            else if (['A', 'B', 'C', 'D'].includes(strRaw.toUpperCase())) {
+                correctKey = strRaw.toUpperCase();
+            }
+            
+            return {
+                id: map['id'] || index + 1,
+                question: qText,
+                options: { A: String(optA), B: String(optB), C: String(optC), D: String(optD) },
+                correctAnswer: correctKey,
+                subject: map['subject'] || map['category'] || 'General'
+            };
+        }
+
+        function loadAllData() {
+            playAudioTone('click');
+            showLoader();
+            const statusIndicator = document.getElementById('syncStatusIndicator');
+            statusIndicator.textContent = "Syncing...";
+            statusIndicator.className = "text-amber-500";
+
+            fetch(API_URL + "?action=getBooks")
+                .then(res => res.json())
+                .then(data => {
+                    libraryBooks = (data || []).map(normalizeBook);
+                    if (libraryBooks.length === 0) {
+                        libraryBooks = getMockBooks();
+                    }
+                    updateDashboardStats();
+                    renderCategoryChart();
+                    renderFavoriteChart();
+                    renderRecentTable();
+                    renderCategoryFilters();
+                    renderBooksGrid();
+                    renderFavoritesGrid();
+                    statusIndicator.textContent = "Auto Live";
+                    statusIndicator.className = "text-emerald-500";
+                })
+                .catch(err => {
+                    console.error("Failed to fetch books:", err);
+                    libraryBooks = getMockBooks();
+                    updateDashboardStats();
+                    renderCategoryChart();
+                    renderFavoriteChart();
+                    renderRecentTable();
+                    renderCategoryFilters();
+                    renderBooksGrid();
+                    renderFavoritesGrid();
+                    statusIndicator.textContent = "Cached";
+                    statusIndicator.className = "text-rose-500";
+                })
+                .finally(() => {
+                    hideLoader();
+                });
+
+            loadSubjectsAndMcq();
+            loadResultsData();
+        }
+
+        function getMockBooks() {
+            return [
+                { id: 1, title: "Advanced Indian Polity & Constitution", author: "M. Laxmikanth", category: "Gujarati Constitution (ભારતનું બંધારણ)", description: "Comprehensive guide covering constitutional structure, fundamental rights, and governance.", image_url: "https://placehold.co/120x160/6366f1/ffffff?text=Polity", pdf_url: "https://drive.google.com", favorite: "Y" },
+                { id: 2, title: "Competitive Mathematics Masterclass", author: "R.S. Aggarwal", category: "Mathematics", description: "In-depth practice problems, quantitative aptitude techniques, and stage preparation tricks.", image_url: "https://placehold.co/120x160/10b981/ffffff?text=Maths", pdf_url: "https://drive.google.com", favorite: "N" },
+                { id: 3, title: "Computer Science & Digital Literacy", author: "P.K. Sinha", category: "Computer Science", description: "Fundamental concepts of computing, networks, database systems, and internet security.", image_url: "https://placehold.co/120x160/3b82f6/ffffff?text=CS", pdf_url: "https://drive.google.com", favorite: "Y" },
+                { id: 4, title: "General Knowledge Digest 2026", author: "Tarun Goyal", category: "General Knowledge", description: "Updated world events, static general knowledge, history, geography, and current affairs.", image_url: "https://placehold.co/120x160/f59e0b/ffffff?text=GK", pdf_url: "https://drive.google.com", favorite: "N" }
+            ].map(normalizeBook);
+        }
+
+        function getMockMcqQuestions() {
+            const arr = [
+                { id: 1, question: "Undo માટેની શોર્ટકટ કી કઈ છે?", option_a: "ctrl + Z", option_b: "ctrl + Y", option_c: "ctrl + X", option_d: "ctrl + C", correctindex: 0, subject: "Computer Shortcuts" },
+                { id: 2, question: "ફોન્ટ બોલ્ડ કરવા માટેની શોર્ટકટ કી કઈ?", option_a: "ctrl + A", option_b: "ctrl + B", option_c: "ctrl + U", option_d: "ctrl + I", correctindex: 1, subject: "Computer Shortcuts" },
+                { id: 3, question: "Copy માટેની શોર્ટકટ કી કઈ છે?", option_a: "ctrl + X", option_b: "ctrl + V", option_c: "ctrl + C", option_d: "ctrl + P", correctindex: 2, subject: "Computer Shortcuts" },
+                { id: 4, question: "Paste કરવા માટે કઈ શોર્ટકટ કી વાપરવામાં આવે છે?", option_a: "ctrl + P", option_b: "ctrl + V", option_c: "ctrl + S", option_d: "ctrl + A", correctindex: 1, subject: "Computer Shortcuts" },
+                { id: 5, question: "Redo માટેની શોર્ટકટ કી કઈ છે?", option_a: "ctrl + Z", option_b: "ctrl + Y", option_c: "ctrl + R", option_d: "ctrl + Shift + Z", correctindex: 1, subject: "Computer Shortcuts" }
+            ];
+            
+            const subjects = ["Computer Shortcuts", "General Knowledge", "Gujarati Constitution", "Mathematics"];
+            for (let i = 6; i <= 300; i++) {
+                const sub = subjects[(i - 1) % subjects.length];
+                const correctIdx = (i - 1) % 4;
+                arr.push({
+                    id: i,
+                    question: `Sample Question #${i} (${sub}): What is the correct option for this item?`,
+                    option_a: `Option A response for Question ${i}`,
+                    option_b: `Option B response for Question ${i}`,
+                    option_c: `Option C response for Question ${i}`,
+                    option_d: `Option D response for Question ${i}`,
+                    correctindex: correctIdx,
+                    subject: sub
+                });
+            }
+            return arr;
+        }
+
+        function loadSubjectsAndMcq() {
+            fetch(API_URL + "?action=getMcq")
+                .then(res => res.json())
+                .then(data => {
+                    rawMcqQuestions = (data || []);
+                    if (rawMcqQuestions.length === 0) {
+                        rawMcqQuestions = getMockMcqQuestions();
+                    }
+                    parseAndSetupMcqData();
+                })
+                .catch(err => {
+                    console.log("Error fetching MCQ, using fallback pool:", err);
+                    rawMcqQuestions = getMockMcqQuestions();
+                    parseAndSetupMcqData();
+                });
+        }
+
+        function parseAndSetupMcqData() {
+            const normalizedList = rawMcqQuestions.map((q, idx) => normalizeQuestion(q, idx));
+            
+            const subSet = new Set();
+            normalizedList.forEach(q => {
+                if (q.subject) subSet.add(q.subject);
+            });
+            
+            availableSubjects = Array.from(subSet);
+            if (availableSubjects.length === 0) availableSubjects = ["General"];
+
+            const selectEl = document.getElementById('mcqSubjectSelect');
+            if (selectEl) {
+                selectEl.innerHTML = '<option value="ALL">All Combined Subjects Pool</option>';
+                availableSubjects.forEach(s => {
+                    const opt = document.createElement('option');
+                    opt.value = s;
+                    opt.textContent = s;
+                    selectEl.appendChild(opt);
+                });
+            }
+
+            filterMcqBySubject('ALL', normalizedList);
+        }
+
+        function handleSubjectChange() {
+            const selectEl = document.getElementById('mcqSubjectSelect');
+            const sub = selectEl ? selectEl.value : 'ALL';
+            const normalizedList = rawMcqQuestions.map((q, idx) => normalizeQuestion(q, idx));
+            filterMcqBySubject(sub, normalizedList);
+            playAudioTone('click');
+        }
+
+        function filterMcqBySubject(subject, allNormalized) {
+            currentSelectedSubject = subject;
+            if (subject === 'ALL') {
+                examQuestions = allNormalized;
+            } else {
+                examQuestions = allNormalized.filter(q => q.subject === subject);
+            }
+            if (examQuestions.length === 0) {
+                examQuestions = allNormalized;
+            }
+            document.getElementById('statTotalMcq').textContent = examQuestions.length;
+            renderStageCards();
+        }
+
+        function updateDashboardStats() {
+            document.getElementById('statTotalBooks').textContent = libraryBooks.length;
+            let favs = 0;
+            libraryBooks.forEach(b => {
+                if ((b._lc['favorite'] || '').toString().toUpperCase() === 'Y') favs++;
+            });
+            document.getElementById('statTotalFavorites').textContent = favs;
+            document.getElementById('statTotalResults').textContent = examResults.length;
+        }
+
+        function renderCategoryChart() {
+            const counts = {};
+            libraryBooks.forEach(b => {
+                const cat = (b._lc['category'] || 'Uncategorized').toString().trim();
+                counts[cat] = (counts[cat] || 0) + 1;
+            });
+
+            const labels = Object.keys(counts);
+            const data = Object.values(counts);
+
+            const ctx = document.getElementById('categoryChart').getContext('2d');
+            if (categoryChartInstance) categoryChartInstance.destroy();
+
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            const textColor = isDark ? '#f8fafc' : '#0f172a';
+
+            categoryChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Books Count',
+                        data: data,
+                        backgroundColor: ['#6366f1', '#3b82f6', '#10b981', '#f59e0b', '#f43f5e', '#8b5cf6'],
+                        borderRadius: 8,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { ticks: { color: textColor }, grid: { display: false } },
+                        y: { ticks: { color: textColor, precision: 0 }, grid: { color: isDark ? '#334155' : '#e2e8f0' } }
+                    }
+                }
+            });
+        }
+
+        function renderFavoriteChart() {
+            let favs = 0;
+            libraryBooks.forEach(b => {
+                if ((b._lc['favorite'] || '').toString().toUpperCase() === 'Y') favs++;
+            });
+            const nonFavs = Math.max(0, libraryBooks.length - favs);
+
+            const ctx = document.getElementById('favoriteChart').getContext('2d');
+            if (favoriteChartInstance) favoriteChartInstance.destroy();
+
+            favoriteChartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Starred Favorites', 'Standard Catalog'],
+                    datasets: [{
+                        data: [favs, nonFavs],
+                        backgroundColor: ['#8b5cf6', '#cbd5e1'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom' } }
+                }
+            });
+        }
+
+        function updateChartsTheme() {
+            if (categoryChartInstance) renderCategoryChart();
+            if (favoriteChartInstance) renderFavoriteChart();
+        }
+
+        function renderRecentTable() {
+            const tbody = document.getElementById('recentTableBody');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            const recent = libraryBooks.slice(0, 5);
+            recent.forEach(b => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-[var(--bg)] transition";
+                tr.innerHTML = `
+                    <td class="py-3 px-3 font-semibold">${b._lc['title'] || 'Untitled'}</td>
+                    <td class="py-3 px-3 text-[var(--muted)]">${b._lc['author'] || 'Unknown'}</td>
+                    <td class="py-3 px-3"><span class="px-2 py-0.5 rounded-full bg-[var(--primary)]/10 text-[var(--primary)] font-medium text-[10px]">${b._lc['category'] || 'General'}</span></td>
+                    <td class="py-3 px-3 text-right">
+                        <button onclick="openPdfModal('${encodeURIComponent(b._lc['pdf_url'] || '#')}', '${encodeURIComponent(b._lc['title'] || 'Document')}')" class="btn-adv btn-adv-primary px-3 py-1.2 text-[11px]">Read PDF</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function renderCategoryFilters() {
+            const container = document.getElementById('categoryFilterButtons');
+            if (!container) return;
+            container.innerHTML = '';
+
+            const categories = new Set();
+            libraryBooks.forEach(b => {
+                const c = (b._lc['category'] || '').toString().trim();
+                if (c) categories.add(c);
+            });
+
+            const allBtn = document.createElement('button');
+            allBtn.className = `btn-adv px-3.5 py-1.5 text-xs ${currentCategoryFilter === '' ? 'btn-adv-primary' : 'btn-adv-secondary'}`;
+            allBtn.textContent = 'All Categories';
+            allBtn.onclick = () => { currentCategoryFilter = ''; renderCategoryFilters(); renderBooksGrid(); playAudioTone('click'); };
+            container.appendChild(allBtn);
+
+            categories.forEach(cat => {
+                const btn = document.createElement('button');
+                btn.className = `btn-adv px-3.5 py-1.5 text-xs ${currentCategoryFilter === cat ? 'btn-adv-primary' : 'btn-adv-secondary'}`;
+                btn.textContent = cat;
+                btn.onclick = () => { currentCategoryFilter = cat; renderCategoryFilters(); renderBooksGrid(); playAudioTone('click'); };
+                container.appendChild(btn);
+            });
+        }
+
+        function renderBooksGrid() {
+            const grid = document.getElementById('booksGrid');
+            if (!grid) return;
+            grid.innerHTML = '';
+
+            const filtered = libraryBooks.filter(b => {
+                const matchesCat = currentCategoryFilter === '' || (b._lc['category'] || '').toString().trim() === currentCategoryFilter;
+                const matchesQuery = currentSearchQuery === '' ||
+                    (b._lc['title'] || '').toString().toLowerCase().includes(currentSearchQuery) ||
+                    (b._lc['author'] || '').toString().toLowerCase().includes(currentSearchQuery) ||
+                    (b._lc['category'] || '').toString().toLowerCase().includes(currentSearchQuery);
+                return matchesCat && matchesQuery;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `<div class="col-span-full text-center py-12 text-[var(--muted)] text-sm">No books found matching your criteria.</div>`;
+                return;
+            }
+
+            filtered.forEach(b => {
+                const isFav = (b._lc['favorite'] || '').toString().toUpperCase() === 'Y';
+                const card = document.createElement('div');
+                card.className = "custom-card rounded-2xl border p-4 flex flex-col justify-between space-y-4 animate-fade hover:shadow-md transition";
+                card.innerHTML = `
+                    <div class="flex gap-4">
+                        <img src="${b._lc['image_url'] || 'https://placehold.co/120x160/6366f1/ffffff?text=Book'}" alt="Cover" class="w-20 h-28 object-cover rounded-xl border border-[var(--border)] shrink-0 shadow-xs" onerror="this.src='https://placehold.co/120x160/6366f1/ffffff?text=Book'" />
+                        <div class="space-y-1.5 min-w-0 flex-1">
+                            <div class="flex justify-between items-start gap-2">
+                                <span class="px-2 py-0.5 bg-[var(--primary)]/10 text-[var(--primary)] text-[10px] font-semibold rounded-md truncate max-w-[140px]">${b._lc['category'] || 'General'}</span>
+                                <button onclick="toggleFavoriteBook('${b._lc['id']}', '${isFav ? 'N' : 'Y'}')" class="text-base hover:scale-110 transition cursor-pointer" title="Toggle Favorite">
+                                    ${isFav ? '💜' : '🤍'}
+                                </button>
+                            </div>
+                            <h4 class="font-bold text-sm leading-snug line-clamp-2">${b._lc['title'] || 'Untitled'}</h4>
+                            <p class="text-xs text-[var(--muted)] line-clamp-1">By ${b._lc['author'] || 'Unknown'}</p>
+                            <p class="text-[11px] text-[var(--muted)] line-clamp-2 mt-1">${b._lc['description'] || 'No description provided.'}</p>
+                        </div>
+                    </div>
+                    <div class="pt-2 border-t border-[var(--border)] flex justify-between items-center">
+                        <span class="text-[10px] text-[var(--muted)] font-mono">ID: ${b._lc['id'] || '#'}</span>
+                        <button onclick="openPdfModal('${encodeURIComponent(b._lc['pdf_url'] || '#')}', '${encodeURIComponent(b._lc['title'] || 'Document')}')" class="btn-adv btn-adv-primary px-4 py-2 text-xs">
+                            View PDF Document ↗
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function renderFavoritesGrid() {
+            const grid = document.getElementById('favoritesGrid');
+            if (!grid) return;
+            grid.innerHTML = '';
+
+            const favs = libraryBooks.filter(b => (b._lc['favorite'] || '').toString().toUpperCase() === 'Y');
+
+            if (favs.length === 0) {
+                grid.innerHTML = `<div class="col-span-full text-center py-12 text-[var(--muted)] text-sm">No starred items found in your vault. Star items from the catalog!</div>`;
+                return;
+            }
+
+            favs.forEach(b => {
+                const card = document.createElement('div');
+                card.className = "custom-card rounded-2xl border p-4 flex flex-col justify-between space-y-4 animate-fade hover:shadow-md transition";
+                card.innerHTML = `
+                    <div class="flex gap-4">
+                        <img src="${b._lc['image_url'] || 'https://placehold.co/120x160/6366f1/ffffff?text=Book'}" alt="Cover" class="w-20 h-28 object-cover rounded-xl border border-[var(--border)] shrink-0 shadow-xs" onerror="this.src='https://placehold.co/120x160/6366f1/ffffff?text=Book'" />
+                        <div class="space-y-1.5 min-w-0 flex-1">
+                            <div class="flex justify-between items-start gap-2">
+                                <span class="px-2 py-0.5 bg-purple-500/10 text-purple-600 text-[10px] font-semibold rounded-md truncate max-w-[140px]">Starred Vault</span>
+                                <button onclick="toggleFavoriteBook('${b._lc['id']}', 'N')" class="text-base hover:scale-110 transition cursor-pointer" title="Remove Favorite">
+                                    💜
+                                </button>
+                            </div>
+                            <h4 class="font-bold text-sm leading-snug line-clamp-2">${b._lc['title'] || 'Untitled'}</h4>
+                            <p class="text-xs text-[var(--muted)] line-clamp-1">By ${b._lc['author'] || 'Unknown'}</p>
+                        </div>
+                    </div>
+                    <div class="pt-2 border-t border-[var(--border)] flex justify-between items-center">
+                        <span class="text-[10px] text-[var(--muted)] font-mono">ID: ${b._lc['id'] || '#'}</span>
+                        <button onclick="openPdfModal('${encodeURIComponent(b._lc['pdf_url'] || '#')}', '${encodeURIComponent(b._lc['title'] || 'Document')}')" class="btn-adv btn-adv-primary px-4 py-2 text-xs">
+                            Read PDF Document ↗
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function toggleFavoriteBook(bookId, newFavStatus) {
+            playAudioTone('click');
+            const target = libraryBooks.find(b => String(b._lc['id']) === String(bookId));
+            if (target) {
+                target._lc['favorite'] = newFavStatus;
+                if (target['favorite']) target['favorite'] = newFavStatus;
+                if (target['Favorite']) target['Favorite'] = newFavStatus;
+            }
+            updateDashboardStats();
+            renderFavoriteChart();
+            renderBooksGrid();
+            renderFavoritesGrid();
+            showToast(newFavStatus === 'Y' ? 'Added to Starred Vault 💜' : 'Removed from Starred Vault', 'info');
+
+            fetch(`${API_URL}?action=toggleFavorite&id=${bookId}&status=${newFavStatus}`).catch(e => console.log(e));
+        }
+
+        function handleSearch(query) {
+            currentSearchQuery = query.toLowerCase().trim();
+            renderBooksGrid();
+        }
+
+        function openPdfModal(encodedUrl, encodedTitle) {
+            playAudioTone('click');
+            const url = decodeURIComponent(encodedUrl);
+            const title = decodeURIComponent(encodedTitle);
+
+            document.getElementById('modalBookTitle').textContent = title;
+            document.getElementById('modalExternalLink').href = url;
+
+            const wrapper = document.getElementById('pdfViewerWrapper');
+            wrapper.innerHTML = `<iframe src="${url}" class="w-full h-full border-0"></iframe>`;
+
+            document.getElementById('pdfModal').classList.remove('hidden');
+        }
+
+        function closePdfModal() {
+            playAudioTone('click');
+            document.getElementById('pdfModal').classList.add('hidden');
+            document.getElementById('pdfViewerWrapper').innerHTML = '';
+        }
+
+        function getQuestionsForStage(stageNum) {
+            const startIdx = (stageNum - 1) * 100;
+            const endIdx = stageNum * 100;
+            return examQuestions.slice(startIdx, endIdx);
+        }
+
+        function startExamWithTimer() {
+            playAudioTone('click');
+            const studentName = (document.getElementById('examStudentName').value || activeSessionUser || "Student").trim();
+            
+            const stageQs = getQuestionsForStage(selectedStage);
+            if (stageQs.length === 0) {
+                showToast("No questions found for selected stage!", "error");
+                return;
+            }
+
+            currentStudentAnswers = {};
+            flaggedQuestions = {};
+            activeQuestionIndex = 0;
+
+            const config = getStageConfig(selectedStage);
+            examTimeRemainingSeconds = config.durationSeconds;
+
+            document.getElementById('lblExamStudent').textContent = studentName;
+            document.getElementById('lblExamStage').textContent = `Stage ${selectedStage}`;
+            document.getElementById('lblExamSubject').textContent = currentSelectedSubject || "All Combined";
+
+            document.getElementById('mcqStudentSetup').classList.add('hidden');
+            document.getElementById('mcqResultArea').classList.add('hidden');
+            document.getElementById('mcqQuestionsArea').classList.remove('hidden');
+
+            renderCurrentQuestion();
+            renderQuestionMatrix();
+            startTimerCountdown();
+        }
+
+        function startTimerCountdown() {
+            if (examTimerInterval) clearInterval(examTimerInterval);
+            updateTimerDisplay();
+
+            examTimerInterval = setInterval(() => {
+                examTimeRemainingSeconds--;
+                updateTimerDisplay();
+
+                if (examTimeRemainingSeconds <= 0) {
+                    clearInterval(examTimerInterval);
+                    playAudioTone('incorrect');
+                    showToast("⏱️ Time expired! Auto-submitting exam...", "error");
+                    submitExam(false);
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const mins = Math.floor(examTimeRemainingSeconds / 60);
+            const secs = examTimeRemainingSeconds % 60;
+            const displayStr = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            const timerEl = document.getElementById('examTimerDisplay');
+            if (timerEl) timerEl.textContent = displayStr;
+        }
+
+        function selectAnswerOption(qIdx, optionKey) {
+            const stageQs = getQuestionsForStage(selectedStage);
+            const currentQ = stageQs[qIdx];
+            if (!currentQ) return;
+
+            currentStudentAnswers[qIdx] = optionKey;
+
+            const isCorrect = (optionKey === currentQ.correctAnswer);
+            if (isCorrect) {
+                playAudioTone('correct');
+            } else {
+                playAudioTone('incorrect');
+            }
+
+            renderCurrentQuestion();
+            renderQuestionMatrix();
+        }
+
+        function renderCurrentQuestion() {
+            const container = document.getElementById('paginatedQuestionContainer');
+            if (!container) return;
+
+            const stageQs = getQuestionsForStage(selectedStage);
+            const totalStageQs = stageQs.length;
+            if (activeQuestionIndex < 0) activeQuestionIndex = 0;
+            if (activeQuestionIndex >= totalStageQs) activeQuestionIndex = totalStageQs - 1;
+
+            const currentQ = stageQs[activeQuestionIndex];
+
+            document.getElementById('currentQuestionIndexDisplay').textContent = activeQuestionIndex + 1;
+            document.getElementById('totalQuestionsCountDisplay').textContent = totalStageQs;
+
+            document.getElementById('prevQuestionBtn').disabled = (activeQuestionIndex === 0);
+            document.getElementById('nextQuestionBtn').disabled = (activeQuestionIndex === totalStageQs - 1);
+
+            const flagBtn = document.getElementById('flagQuestionBtn');
+            if (flaggedQuestions[activeQuestionIndex]) {
+                flagBtn.textContent = "🚩 Unflag Question";
+                flagBtn.className = "btn-adv btn-adv-secondary px-3 py-2.5 text-xs font-semibold text-amber-600 border-amber-500 bg-amber-500/10";
+            } else {
+                flagBtn.textContent = "🚩 Flag for Review";
+                flagBtn.className = "btn-adv btn-adv-secondary px-3 py-2.5 text-xs font-semibold text-amber-500 border-amber-300";
+            }
+
+            const chosen = currentStudentAnswers[activeQuestionIndex];
+
+            let optionsHtml = '';
+            ['A', 'B', 'C', 'D'].forEach(key => {
+                const optText = currentQ.options[key] || '';
+                if (!optText) return;
+
+                let btnStyle = 'border-[var(--border)] bg-[var(--card)] hover:border-[var(--primary)]';
+                let indicator = '';
+
+                if (chosen === key) {
+                    if (key === currentQ.correctAnswer) {
+                        btnStyle = 'border-emerald-500 bg-emerald-500/15 text-emerald-600 font-bold';
+                        indicator = '✅ Correct Answer!';
+                    } else {
+                        btnStyle = 'border-rose-500 bg-rose-500/15 text-rose-600 font-bold';
+                        indicator = '❌ Incorrect Choice';
+                    }
+                } else if (chosen && key === currentQ.correctAnswer) {
+                    btnStyle = 'border-emerald-500/60 bg-emerald-500/10 text-emerald-600';
+                    indicator = '💡 Correct Option';
+                }
+
+                optionsHtml += `
+                    <button onclick="selectAnswerOption(${activeQuestionIndex}, '${key}')" class="w-full text-left p-3.5 rounded-xl border-2 transition flex items-center justify-between gap-3 ${btnStyle}">
+                        <div class="flex items-center gap-3">
+                            <span class="w-7 h-7 rounded-lg bg-[var(--bg)] flex items-center justify-center font-bold text-xs border border-[var(--border)] shrink-0">${key}</span>
+                            <span class="text-xs font-medium">${optText}</span>
+                        </div>
+                        ${indicator ? `<span class="text-[11px] font-bold shrink-0">${indicator}</span>` : ''}
+                    </button>
+                `;
+            });
+
+            let solutionBox = '';
+            if (chosen) {
+                const isRight = (chosen === currentQ.correctAnswer);
+                solutionBox = `
+                    <div class="p-3.5 rounded-xl border ${isRight ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-700 dark:text-emerald-300' : 'bg-rose-500/10 border-rose-500/30 text-rose-700 dark:text-rose-300'} text-xs space-y-1">
+                        <div class="font-bold flex items-center gap-1.5">
+                            <span>${isRight ? '🎉 Correct!' : '❌ Incorrect!'}</span>
+                            <span>Correct Answer: Option ${currentQ.correctAnswer} (${currentQ.options[currentQ.correctAnswer] || ''})</span>
+                        </div>
+                    </div>
+                `;
+            }
+
+            container.innerHTML = `
+                <div class="space-y-4">
+                    <div class="flex justify-between items-start gap-3">
+                        <span class="px-2.5 py-1 rounded-lg bg-[var(--primary)]/10 text-[var(--primary)] font-bold text-xs">Q.${activeQuestionIndex + 1}</span>
+                        <span class="text-[11px] text-[var(--muted)] font-medium">Subject: ${currentQ.subject || 'General'}</span>
+                    </div>
+                    <p class="font-bold text-sm leading-relaxed">${currentQ.question}</p>
+                    <div class="space-y-2.5 pt-1">
+                        ${optionsHtml}
+                    </div>
+                    ${solutionBox}
+                </div>
+            `;
+        }
+
+        function renderQuestionMatrix() {
+            const matrixGrid = document.getElementById('questionMatrixGrid');
+            if (!matrixGrid) return;
+            matrixGrid.innerHTML = '';
+
+            const stageQs = getQuestionsForStage(selectedStage);
+
+            stageQs.forEach((q, idx) => {
+                const chosen = currentStudentAnswers[idx];
+                const isFlagged = flaggedQuestions[idx];
+                
+                let bgStyle = 'bg-[var(--card)] text-[var(--text)] border-[var(--border)]';
+
+                if (chosen) {
+                    if (chosen === q.correctAnswer) {
+                        bgStyle = 'bg-emerald-500 text-white border-emerald-600 font-bold';
+                    } else {
+                        bgStyle = 'bg-rose-500 text-white border-rose-600 font-bold';
+                    }
+                } else if (isFlagged) {
+                    bgStyle = 'bg-amber-500 text-white border-amber-600 font-bold';
+                }
+
+                if (idx === activeQuestionIndex) {
+                    bgStyle += ' ring-2 ring-[var(--primary)] scale-105';
+                }
+
+                const btn = document.createElement('button');
+                btn.className = `w-7 h-7 rounded-lg text-[11px] border flex items-center justify-center transition ${bgStyle}`;
+                btn.textContent = idx + 1;
+                btn.onclick = () => {
+                    activeQuestionIndex = idx;
+                    playAudioTone('click');
+                    renderCurrentQuestion();
+                    renderQuestionMatrix();
+                };
+
+                matrixGrid.appendChild(btn);
+            });
+        }
+
+        function navigateQuestion(direction) {
+            playAudioTone('click');
+            const stageQs = getQuestionsForStage(selectedStage);
+            const newIndex = activeQuestionIndex + direction;
+
+            if (newIndex >= 0 && newIndex < stageQs.length) {
+                activeQuestionIndex = newIndex;
+                renderCurrentQuestion();
+                renderQuestionMatrix();
+            }
+        }
+
+        function toggleFlagQuestion() {
+            playAudioTone('click');
+            flaggedQuestions[activeQuestionIndex] = !flaggedQuestions[activeQuestionIndex];
+            renderCurrentQuestion();
+            renderQuestionMatrix();
+        }
+
+        function submitExam(userInitiated = true) {
+            if (userInitiated) {
+                showCustomConfirm("Submit Stage Exam", "Are you sure you want to finalize and submit this exam stage?", () => {
+                    processExamSubmission();
+                });
+            } else {
+                processExamSubmission();
+            }
+        }
+
+        function processExamSubmission() {
+            if (examTimerInterval) clearInterval(examTimerInterval);
+
+            const stageQs = getQuestionsForStage(selectedStage);
+            let correctCount = 0;
+            let incorrectCount = 0;
+            let unattemptedCount = 0;
+
+            const reviewItems = [];
+
+            stageQs.forEach((q, idx) => {
+                const chosen = currentStudentAnswers[idx];
+                let status = 'UNATTEMPTED';
+
+                if (chosen) {
+                    if (chosen === q.correctAnswer) {
+                        correctCount++;
+                        status = 'CORRECT';
+                    } else {
+                        incorrectCount++;
+                        status = 'INCORRECT';
+                    }
+                } else {
+                    unattemptedCount++;
+                }
+
+                reviewItems.push({
+                    qNum: idx + 1,
+                    question: q.question,
+                    chosen: chosen || 'Skipped',
+                    correctAnswer: q.correctAnswer,
+                    correctText: q.options[q.correctAnswer] || '',
+                    status: status,
+                    options: q.options
+                });
+            });
+
+            const totalQs = stageQs.length;
+            const accuracy = totalQs > 0 ? Math.round((correctCount / totalQs) * 100) : 0;
+            const studentName = (document.getElementById('examStudentName').value || activeSessionUser || "Student").trim();
+
+            markStageCompleted(selectedStage);
+
+            const resultRecord = {
+                timestamp: new Date().toLocaleString(),
+                studentName: studentName,
+                stage: `Stage ${selectedStage}`,
+                subject: currentSelectedSubject || "Combined",
+                score: `${correctCount}/${totalQs}`,
+                accuracy: `${accuracy}%`,
+                reviewItems: reviewItems
+            };
+
+            examResults.unshift(resultRecord);
+            localStorage.setItem('jgv_local_results', JSON.stringify(examResults));
+            updateDashboardStats();
+
+            currentSubmittedExamReviewData = reviewItems;
+
+            document.getElementById('mcqQuestionsArea').classList.add('hidden');
+            document.getElementById('mcqResultArea').classList.remove('hidden');
+
+            document.getElementById('resultEmojiHeader').textContent = accuracy >= 70 ? '🎉' : '👍';
+            document.getElementById('resultTitleHeader').textContent = `Stage ${selectedStage} Completed!`;
+            document.getElementById('examScoreSummary').textContent = `Score: ${correctCount} / ${totalQs} Correct • Accuracy: ${accuracy}% • Incorrect: ${incorrectCount} • Skipped: ${unattemptedCount}`;
+
+            const nextStageBadge = document.getElementById('unlockedNextStageBadge');
+            const totalStages = getTotalStages();
+            if (selectedStage < totalStages) {
+                nextStageBadge.textContent = `Stage ${selectedStage + 1} Unlocked 🔥`;
+            } else {
+                nextStageBadge.textContent = `All ${totalStages} Stages Completed! 🏆`;
+            }
+
+            renderReviewList('ALL');
+            playAudioTone(accuracy >= 50 ? 'correct' : 'incorrect');
+
+            // Optional background post to sheet
+            fetch(`${API_URL}?action=saveResult`, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(resultRecord)
+            }).catch(e => console.log(e));
+        }
+
+        function filterReviewList(filterType) {
+            playAudioTone('click');
+            activeReviewFilter = filterType;
+
+            ['ALL', 'CORRECT', 'INCORRECT', 'UNATTEMPTED'].forEach(f => {
+                const btn = document.getElementById('reviewFilter' + f);
+                if (btn) {
+                    if (f === filterType) {
+                        btn.className = "btn-adv btn-adv-primary px-2.5 py-1 text-[11px]";
+                    } else {
+                        btn.className = "btn-adv btn-adv-secondary px-2.5 py-1 text-[11px]";
+                    }
+                }
+            });
+
+            renderReviewList(filterType);
+        }
+
+        function renderReviewList(filterType) {
+            const listEl = document.getElementById('detailedAnswerReviewList');
+            if (!listEl || !currentSubmittedExamReviewData) return;
+            listEl.innerHTML = '';
+
+            const filtered = currentSubmittedExamReviewData.filter(item => {
+                if (filterType === 'ALL') return true;
+                return item.status === filterType;
+            });
+
+            if (filtered.length === 0) {
+                listEl.innerHTML = `<div class="text-center py-6 text-[var(--muted)]">No questions in this filter category.</div>`;
+                return;
+            }
+
+            filtered.forEach(item => {
+                let badgeClass = 'bg-amber-500/10 text-amber-600 border-amber-500/30';
+                let icon = '⏸️ Skipped';
+
+                if (item.status === 'CORRECT') {
+                    badgeClass = 'bg-emerald-500/10 text-emerald-600 border-emerald-500/30';
+                    icon = '✅ Correct';
+                } else if (item.status === 'INCORRECT') {
+                    badgeClass = 'bg-rose-500/10 text-rose-600 border-rose-500/30';
+                    icon = '❌ Incorrect';
+                }
+
+                const card = document.createElement('div');
+                card.className = `p-3 rounded-xl border ${badgeClass} space-y-1.5`;
+                card.innerHTML = `
+                    <div class="flex justify-between items-center font-bold">
+                        <span>Q.${item.qNum}: ${item.question}</span>
+                        <span class="px-2 py-0.5 rounded-full text-[10px] border">${icon}</span>
+                    </div>
+                    <div class="text-[11px] space-y-0.5 font-medium">
+                        <div>Your Answer: <strong class="underline">${item.chosen}</strong></div>
+                        <div>Correct Option: <strong>Option ${item.correctAnswer} (${item.correctText})</strong></div>
+                    </div>
+                `;
+                listEl.appendChild(card);
+            });
+        }
+
+        function resetExamForm() {
+            playAudioTone('click');
+            selectedStage = getHighestUnlockedStage();
+            renderStageCards();
+            document.getElementById('mcqResultArea').classList.add('hidden');
+            document.getElementById('mcqStudentSetup').classList.remove('hidden');
+        }
+
+        function loadResultsData() {
+            const tbody = document.getElementById('resultsTableBody');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            if (examResults.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-8 text-[var(--muted)]">No exam results recorded yet. Take an exam to see records!</td></tr>`;
+                return;
+            }
+
+            examResults.forEach((res, idx) => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-[var(--bg)] transition";
+                tr.innerHTML = `
+                    <td class="py-3 px-3 text-[var(--muted)]">${res.timestamp || '-'}</td>
+                    <td class="py-3 px-3 font-semibold">${res.studentName || 'Student'}</td>
+                    <td class="py-3 px-3"><span class="px-2 py-0.5 rounded-full bg-[var(--primary)]/10 text-[var(--primary)] font-bold text-[10px]">${res.stage || 'Stage 1'} (${res.subject || 'All'})</span></td>
+                    <td class="py-3 px-3 font-bold">${res.score || '-'}</td>
+                    <td class="py-3 px-3 text-emerald-600 font-bold">${res.accuracy || '-'}</td>
+                    <td class="py-3 px-3 text-right">
+                        <button onclick="viewResultReviewModal(${idx})" class="btn-adv btn-adv-secondary px-3 py-1 text-[11px]">View Review</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function viewResultReviewModal(index) {
+            playAudioTone('click');
+            const item = examResults[index];
+            if (!item || !item.reviewItems) {
+                showToast("No detailed response data available for this entry.", "info");
+                return;
+            }
+
+            const modalBody = document.getElementById('reviewModalBody');
+            modalBody.innerHTML = '';
+
+            item.reviewItems.forEach(rev => {
+                const div = document.createElement('div');
+                let badgeStyle = 'border-amber-500/30 bg-amber-500/10 text-amber-600';
+                if (rev.status === 'CORRECT') badgeStyle = 'border-emerald-500/30 bg-emerald-500/10 text-emerald-600';
+                if (rev.status === 'INCORRECT') badgeStyle = 'border-rose-500/30 bg-rose-500/10 text-rose-600';
+
+                div.className = `p-3 rounded-xl border ${badgeStyle} space-y-1`;
+                div.innerHTML = `
+                    <div class="font-bold flex justify-between">
+                        <span>Q.${rev.qNum}: ${rev.question}</span>
+                        <span>${rev.status}</span>
+                    </div>
+                    <div>Chosen Answer: <strong>${rev.chosen}</strong></div>
+                    <div>Correct Answer: <strong>Option ${rev.correctAnswer} (${rev.correctText})</strong></div>
+                `;
+                modalBody.appendChild(div);
+            });
+
+            document.getElementById('reviewModal').classList.remove('hidden');
+        }
+
+        function closeReviewModal() {
+            playAudioTone('click');
+            document.getElementById('reviewModal').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
