@@ -1,368 +1,321 @@
+```html
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="gu">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="The complete suite of free, secure, client-side PDF tools by Vishnu. Preview, merge, split, compress, convert, rotate, and edit your PDFs without ever uploading your files.">
-    <title>Vishnu Tools - Complete Free & Secure Online PDF Tools</title>
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    
+    <title>Jgvfriendship all in one tools</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
-        
         :root {
-            --primary-color: #1a1a2e; --secondary-color: #16213e; --accent-color: #e94560;
-            --text-color: #f0f0f0; --card-bg: #1f2847; --success-color: #28a745;
-            --error-color: #dc3545; --light-text: #bdc3c7;
+            --primary-color: #4f46e5;
+            --primary-hover: #4338ca;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #1e293b;
+            --border-color: #e2e8f0;
         }
 
-        body.light-mode {
-            --primary-color: #f4f7fc; --secondary-color: #ffffff; --text-color: #333333;
-            --card-bg: #ffffff; --light-text: #555555;
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px 10px;
+            text-align: center;
         }
 
-        *{box-sizing:border-box;margin:0;padding:0}
-        html{scroll-behavior:smooth}
-        body{font-family:'Poppins',sans-serif;background-color:var(--primary-color);color:var(--text-color);line-height:1.7; transition: background-color 0.3s, color 0.3s;}
-        
-        #galaxy-animation{position:fixed;top:0;left:0;width:100%;height:100vh;overflow:hidden;z-index:-1;display:none;}
-        body:not(.light-mode) #galaxy-animation{display:block;}
-        .star{position:absolute;background-color:white;border-radius:50%;animation:twinkle 2s infinite ease-in-out;}
-        @keyframes twinkle{0%,100%{opacity:0.5;}50%{opacity:1;transform:scale(1.1);}}
-
-        header{background:var(--secondary-color);padding:1rem 5%;position:sticky;top:0;z-index:1000;box-shadow:0 2px 10px rgba(0,0,0,0.2); transition: background-color 0.3s;}
-        nav{display:flex;justify-content:space-between;align-items:center}
-        .logo{font-size:1.5rem;font-weight:700;color:var(--accent-color);text-decoration:none}
-        .nav-links{list-style:none;display:flex;align-items:center;}.nav-links li{margin-left:2rem}.nav-links a{text-decoration:none;color:var(--text-color);font-weight:600;cursor:pointer;transition:color 0.3s ease}.nav-links a:hover{color:var(--accent-color)}
-        
-        .dropdown { position: relative; display: inline-block; }
-        .dropdown .dropbtn { cursor: pointer; display: flex; align-items: center; gap: 0.5rem; }
-        .dropdown-content {
-            display: none; position: absolute; background-color: var(--secondary-color);
-            min-width: 400px; box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-            z-index: 1; border-radius: 10px; padding: 1rem;
-            margin-top: 10px; left: 50%; transform: translateX(-50%);
-            display: none; grid-template-columns: 1fr 1fr; gap: 0.75rem;
-        }
-        .dropdown:hover .dropdown-content { display: grid; }
-        .dropdown-content a {
-            color: var(--text-color); padding: 12px 16px; text-decoration: none;
-            display: flex; align-items: center; gap: 10px; border-radius: 8px;
-            background-color: var(--primary-color); transition: background-color 0.3s, transform 0.2s;
-            font-size: 0.9rem; font-weight: 500;
-        }
-        .dropdown-content a:hover { background-color: var(--accent-color); color: white; transform: scale(1.03); }
-        .dropdown-content i { width: 20px; text-align: center; }
-
-        .theme-switch-wrapper{display:flex;align-items:center;margin-left:2rem}.theme-switch{display:inline-block;height:24px;position:relative;width:50px}.theme-switch input{display:none}.slider{background-color:#ccc;bottom:0;cursor:pointer;left:0;position:absolute;right:0;top:0;transition:.4s}.slider:before{background-color:#fff;bottom:2px;content:"";height:20px;left:3px;position:absolute;transition:.4s;width:20px}.slider.round{border-radius:34px}.slider.round:before{border-radius:50%}input:checked+.slider{background-color:var(--accent-color)}input:checked+.slider:before{transform:translateX(26px)}
-
-        #mobile-menu-icon{display:none;font-size:1.5rem;cursor:pointer}
-        .content-section{padding:4rem 5%;max-width:1200px;margin:0 auto}.section-title{font-size:2.5rem;margin-bottom:3rem;text-align:center;color:var(--accent-color)}
-        
-        /* Centered homepage style */
-        #page-home .content-section {
-            padding-top: 5rem;
-            padding-bottom: 5rem;
+        header h1 {
+            color: var(--primary-color);
+            margin-bottom: 5px;
+            font-size: 1.8rem;
         }
 
-        .tool-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:2rem}
-        .tool-card{background:var(--card-bg);padding:2rem;border-radius:10px;text-align:center;cursor:pointer;transition:transform .3s ease,box-shadow .3s ease; box-shadow: 0 5px 15px rgba(0,0,0,0.1);}.tool-card:hover{transform:translateY(-10px);box-shadow:0 10px 20px rgba(0,0,0,0.2)}.tool-card i{font-size:3rem;color:var(--accent-color);margin-bottom:1rem}
-        
-        #tool-page-container{max-width:900px;margin:0 auto}.tool-page{background:var(--secondary-color);padding:2rem;border-radius:10px;text-align:center}
-        .tool-header{display:flex;align-items:center;justify-content:center;position:relative;margin-bottom:1.5rem}.tool-header h2{font-size:2.5rem;color:var(--accent-color)}
-        #back-button{position:absolute;left:0;top:50%;transform:translateY(-50%);background:var(--accent-color);color:white;border:none;padding:.5rem 1rem;border-radius:5px;cursor:pointer;font-weight:600}
-        .upload-area{border:3px dashed var(--accent-color);border-radius:10px;padding:3rem;margin:2rem 0;background:var(--primary-color);transition:background-color .3s}.upload-area.dragover{background-color:var(--card-bg)}
-        #file-list{margin-top:1.5rem;text-align:left}.file-item{background:var(--primary-color);padding:.5rem 1rem;border-radius:5px;margin-bottom:.5rem;display:flex;justify-content:space-between;align-items:center;word-break:break-all}
-        .upload-btn{background:var(--accent-color);color:#fff;padding:.7rem 1.5rem;border:none;border-radius:5px;cursor:pointer;font-weight:600}
-        .tool-options{margin:2rem 0;text-align:left}.tool-options label{display:block;margin-bottom:.5rem;font-weight:600}
-        .tool-options input,.tool-options select{width:100%;padding:0.7rem;border-radius:5px;border:1px solid var(--accent-color);background:var(--primary-color);color:var(--text-color);margin-bottom:1rem;font-size:1rem}
-        .process-btn{width:100%;padding:1rem;background:var(--accent-color);color:#fff;border:none;border-radius:5px;font-size:1.2rem;cursor:pointer;font-weight:700}.process-btn:disabled{background:#888;cursor:not-allowed}
-        #preview-area{padding:2rem;background-color:var(--primary-color);border-radius:8px;margin-top:2rem;text-align:center}
-        #preview-canvas{border:1px solid var(--accent-color);border-radius:5px;max-width:100%;height:auto;margin-bottom:1.5rem}
-        .download-btn{display:inline-block;width:auto;padding:1rem 2rem;margin-right:1rem}.start-over-btn{background-color:var(--light-text);color:var(--primary-color)}
-        .tool-details{text-align:left;margin-top:3rem;background:var(--card-bg);padding:2rem;border-radius:8px}.tool-details h3{color:var(--accent-color);margin-bottom:1rem;border-bottom:2px solid var(--accent-color);padding-bottom:.5rem}.tool-details ul{list-style:none;padding-left:0}.tool-details li{margin-bottom:.75rem;position:relative;padding-left:25px}.tool-details li::before{content:'\\f058';font-family:'Font Awesome 6 Free';font-weight:900;color:var(--success-color);position:absolute;left:0;top:2px}.tool-details .faq-item{margin-bottom:1rem}.tool-details .faq-item strong{display:block}
-        .static-page h2{font-size:2.5rem;color:var(--accent-color);margin-bottom:2rem}.static-page h3{font-size:1.8rem;color:var(--accent-color);margin-top:2rem;margin-bottom:1rem}.static-page p,.static-page li{color:var(--light-text);margin-bottom:1rem}.static-page ul{list-style-position:inside}
-        footer{background:var(--secondary-color);color:var(--light-text);text-align:center;padding:2rem 5%;margin-top:3rem; transition: background-color 0.3s;}
-        .footer-links{list-style:none;display:flex;justify-content:center;flex-wrap:wrap;margin-bottom:1rem}.footer-links li{margin:0 1rem}.footer-links a{color:var(--light-text);text-decoration:none;cursor:pointer}.footer-links a:hover{color:var(--accent-color)}
-        .notification{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);padding:1rem 2rem;border-radius:5px;color:white;z-index:2000;opacity:0;visibility:hidden;transition:opacity .5s,visibility .5s}.notification.show{opacity:1;visibility:visible}.notification.success{background-color:var(--success-color)}.notification.error{background-color:var(--error-color)}
-        .hidden{display:none !important}
-        @media (max-width:768px){.nav-links{display:none}#mobile-menu-icon{display:block}.hero-content h1{font-size:2.5rem}#back-button{position:static;transform:none;margin-bottom:1rem}.tool-header{flex-direction:column}.dropdown-content{min-width: 250px; grid-template-columns: 1fr;}}
+        header p {
+            color: #64748b;
+            margin-top: 0;
+            font-size: 0.95rem;
+        }
+
+        /* Navigation Container */
+        .nav-section {
+            background: var(--card-bg);
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border-color);
+        }
+
+        .search-container {
+            margin-bottom: 15px;
+        }
+
+        #search-input {
+            width: 100%;
+            padding: 10px 15px;
+            font-size: 15px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            outline: none;
+            box-sizing: border-box;
+            transition: 0.3s;
+        }
+
+        #search-input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+        }
+
+        #button-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            font-size: 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .nav-btn:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        .no-result {
+            color: #ef4444;
+            font-style: italic;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            display: none;
+        }
+
+        /* Tools Workspace Grid */
+        .tools-wrapper {
+            max-width: 800px;
+            margin: 30px auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            text-align: left;
+        }
+
+        .tool-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border-color);
+        }
+
+        .tool-card h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+            font-size: 1.1rem;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 8px;
+        }
+
+        .tool-card textarea, .tool-card input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            box-sizing: border-box;
+            margin-top: 8px;
+            margin-bottom: 12px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .tool-card textarea:focus, .tool-card input:focus {
+            border-color: var(--primary-color);
+        }
+
+        .tool-card button {
+            background-color: #10b981;
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        .tool-card button:hover {
+            background-color: #059669;
+        }
+
+        .output-box {
+            background: #f1f5f9;
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 13px;
+            margin-top: 10px;
+            word-break: break-all;
+            color: #334155;
+        }
+
+        /* Arrow Navigation */
+        .arrow-container {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .arrow-btn {
+            background-color: #3b82f6;
+            color: white;
+            padding: 8px 16px;
+            font-size: 14px;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+
+        .arrow-btn:hover {
+            background-color: #2563eb;
+        }
+
+        .disabled {
+            background-color: #cbd5e1;
+            pointer-events: none;
+        }
     </style>
 </head>
 <body>
 
-    <div id="galaxy-animation"></div>
-
     <header>
-        <nav>
-            <a href="#" class="logo page-link" data-page="home">Vishnu Tools</a>
-            <ul class="nav-links" id="nav-links">
-                <li><a class="page-link" data-page="home">Home</a></li>
-                <li class="dropdown">
-                    <a class="dropbtn">All Tools <i class="fas fa-chevron-down fa-xs"></i></a>
-                    <div class="dropdown-content" id="tools-dropdown-container">
-                        <!-- Tool buttons will be dynamically added here by JavaScript -->
-                    </div>
-                </li>
-                <li><a class="page-link" data-page="about">About</a></li>
-                <li><a class="page-link" data-page="contact">Contact</a></li>
-                <li>
-                    <div class="theme-switch-wrapper">
-                        <label class="theme-switch" for="theme-checkbox">
-                            <input type="checkbox" id="theme-checkbox" />
-                            <div class="slider round"></div>
-                        </label>
-                    </div>
-                </li>
-            </ul>
-        </nav>
+        <h1>Jgvfriendship all in one tools</h1>
+        <p>તમારી GitHub વેબસાઇટનું સ્માર્ટ ટૂલ્સ અને નેવિગેશન હબ</p>
     </header>
 
-    <main>
-        <!-- Homepage now directly shows the tools -->
-        <div id="page-home" class="page-content">
-            <section id="tools" class="content-section">
-                <h2 class="section-title">Welcome to Vishnu Tools!</h2>
-                <p style="text-align: center; max-width: 600px; margin: -2rem auto 3rem; color: var(--light-text);">
-                    Select a tool below to get started. All your files are processed securely in your browser.
-                </p>
-                <div class="tool-grid" id="tool-grid">
-                    <!-- Tool cards will be dynamically added here by JavaScript -->
-                </div>
-            </section>
+    <div class="nav-section">
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="🔍 ફાઇલ શોધો..." onkeyup="filterPages()">
+            <div id="no-result-msg" class="no-result">કોઈ પેજ મળ્યું નથી!</div>
+        </div>
+        <div id="button-container"></div>
+    </div>
+
+    <div class="tools-wrapper">
+        <!-- Tool 1: Text Statistics -->
+        <div class="tool-card">
+            <h3>📝 શબ્દ અને અક્ષર ગણતરી (Word Counter)</h3>
+            <textarea id="text-input" rows="3" placeholder="અહીં લખાણ લખો..." oninput="analyzeText()"></textarea>
+            <div class="output-box" id="text-stats">અક્ષરો: 0 | શબ્દો: 0</div>
         </div>
 
-        <div id="page-tool" class="page-content hidden">
-             <div class="content-section" id="tool-page-container"></div>
+        <!-- Tool 2: Password Generator -->
+        <div class="tool-card">
+            <h3>🔐 મજબૂત પાસવર્ડ જનરેટર</h3>
+            <button onclick="generatePassword()">નવો પાસવર્ડ બનાવો</button>
+            <div class="output-box" id="password-output">પાસવર્ડ અહીં દેખાશે</div>
         </div>
-        
-        <div id="page-about" class="page-content hidden"><div class="static-page content-section"><h2>About Vishnu Tools</h2><p>Welcome to Vishnu Tools, your one-stop solution for all your PDF needs. Our mission is to provide easy-to-use, powerful, and completely free PDF tools that respect your privacy.</p><p>In a world where data privacy is paramount, we saw a need for a reliable PDF utility that doesn't require you to upload your sensitive documents to a server. That's why we built this toolkit. Every single operation, from merging documents to adding a password, happens directly within your own web browser. Your files never leave your computer, giving you complete peace of mind.</p><h3>Our Philosophy</h3><ul><li><strong>Privacy First:</strong> We will never ask you to upload your files. All processing is done client-side. What's yours, stays yours.</li><li><strong>Simplicity:</strong> Our tools are designed to be intuitive and straightforward. No complicated interfaces, no unnecessary steps. Just select your tool, choose your file, and get the job done.</li><li><strong>Accessibility:</strong> Vishnu Tools is free for everyone and accessible from any modern web browser.</li><li><strong>Powerful Functionality:</strong> We leverage powerful open-source libraries to provide a robust suite of features that rival many premium desktop applications.</li></ul><p>Thank you for choosing Vishnu Tools. We are constantly working to improve our tools and add new features.</p></div></div>
-        <div id="page-contact" class="page-content hidden"><div class="static-page content-section"><h2>Contact Us</h2><p>We'd love to hear from you! Whether you have a question about our tools, a suggestion for a new feature, or just want to say hello, feel free to reach out.</p><h3>How to Reach Us</h3><p>For all inquiries, please email me at: <strong>vishnumakwana1354@gmail.com</strong></p><p>I aim to respond to all emails within 48 business hours. Please note that for your own security, you should not send any sensitive documents or personal information via email.</p></div></div>
-        <div id="page-privacy" class="page-content hidden"><div class="static-page content-section"><h2>Privacy Policy</h2><p><em>Last Updated: June 30, 2025</em></p><p>Your privacy is critically important to us. At Vishnu Tools, we have a few fundamental principles:</p><h3>1. Client-Side Processing & File Privacy</h3><p>This is the cornerstone of our privacy policy. Vishnu Tools is a "client-side" application. This means that all the tools on this website run directly in your local web browser. <strong>Your files are NEVER uploaded, transferred, or stored on our servers or any third-party server.</strong> They remain on your computer at all times. You can verify this by disconnecting from the internet after the page has loaded; the tools will continue to function.</p><h3>2. Personal Information</h3><p>We do not collect any personal information. You are not required to create an account, sign up, or provide any personal data like your name or email address to use our services.</p><h3>3. Cookies and Web Storage</h3><p>Vishnu Tools does not use cookies for tracking. We may use your browser's `localStorage` or `sessionStorage` for the sole purpose of improving your user experience (like saving your theme preference), but this data is stored on your device and is not accessible to us.</p></div></div>
-        <div id="page-terms" class="page-content hidden"><div class="static-page content-section"><h2>Terms & Conditions</h2><p><em>Last Updated: June 30, 2025</em></p><p>Welcome to Vishnu Tools. By using our website (the "Service"), you agree to these Terms and Conditions. The Service is provided "AS IS" without warranty of any kind. Since the Service operates entirely on your computer, you are solely responsible for your data and any backups. In no event shall Vishnu Tools be liable for any damages, including data loss, resulting from the use of the Service. Your use of the service is at your own risk.</p></div></div>
-        <div id="page-disclaimer" class="page-content hidden"><div class="static-page content-section"><h2>Disclaimer</h2><p><em>Last Updated: June 30, 2025</em></p><p>The tools on Vishnu Tools are provided for general purposes only. We make no representation or warranty of any kind regarding the accuracy, reliability, or completeness of any tool. Under no circumstance shall we have any liability to you for any loss or damage of any kind incurred as a result of the use of the site. Your use of the site is solely at your own risk.</p></div></div>
-    </main>
-    
-    <footer>
-        <div class="footer-links">
-            <li><a class="page-link" data-page="about">About</a></li>
-            <li><a class="page-link" data-page="contact">Contact</a></li>
-            <li><a class="page-link" data-page="privacy">Privacy</a></li>
-            <li><a class="page-link" data-page="terms">Terms</a></li>
-            <li><a class="page-link" data-page="disclaimer">Disclaimer</a></li>
+
+        <!-- Tool 3: Case Converter -->
+        <div class="tool-card">
+            <h3>🔠 કેસ કન્વર્ટર (Uppercase/Lowercase)</h3>
+            <input type="text" id="case-input" placeholder="અહીં ટેક્સ્ટ લખો...">
+            <button onclick="convertToUpperCase()">CAPITAL</button>
+            <button onclick="convertToLowerCase()" style="background-color: #6366f1;">small</button>
+            <div class="output-box" id="case-output">પરિણામ...</div>
         </div>
-        <div class="footer-copyright"> &copy; 2025 Vishnu Tools. All Rights Reserved.</div>
-    </footer>
 
-    <div id="notification" class="notification"></div>
+        <!-- Tool 4: Simple Calculator -->
+        <div class="tool-card">
+            <h3>🔢 ઝડપી ગણતરી (Quick Calc)</h3>
+            <input type="text" id="calc-input" placeholder="દા.ત. 50 + 25 * 2">
+            <button onclick="calculateResult()">ગણતરી કરો</button>
+            <div class="output-box" id="calc-output">પરિણામ: 0</div>
+        </div>
+    </div>
 
-    <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.18/mammoth.browser.min.js"></script>
-    
+    <div class="arrow-container" id="arrow-container"></div>
+
     <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const { PDFDocument, rgb, degrees, StandardFonts } = PDFLib;
-        const { pdfjsLib } = window;
-        pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js`;
-
-        const pages = document.querySelectorAll('.page-content');
-        const pageLinks = document.querySelectorAll('.page-link');
-        const notification = document.getElementById('notification');
-        const themeCheckbox = document.getElementById('theme-checkbox');
-        const galaxyContainer = document.getElementById('galaxy-animation');
-        const toolsDropdownContainer = document.getElementById('tools-dropdown-container');
-        const toolGrid = document.getElementById('tool-grid');
-
-        let selectedFiles = [];
-        let currentTool = null;
-        
-        function applyTheme(theme) {
-            if (theme === 'light') {
-                document.body.classList.add('light-mode');
-                themeCheckbox.checked = true;
-            } else {
-                document.body.classList.remove('light-mode');
-                themeCheckbox.checked = false;
-            }
-        }
-        
-        themeCheckbox.addEventListener('change', () => {
-            const newTheme = themeCheckbox.checked ? 'light' : 'dark';
-            localStorage.setItem('theme', newTheme);
-            applyTheme(newTheme);
-        });
-
-        const savedTheme = localStorage.getItem('theme') || 'dark';
-        applyTheme(savedTheme);
-
-        function createGalaxy() {
-            const starCount = 150;
-            for (let i = 0; i < starCount; i++) {
-                const star = document.createElement('div'); star.className = 'star';
-                const size = Math.random() * 2;
-                star.style.width = `${size}px`; star.style.height = `${size}px`;
-                star.style.top = `${Math.random() * 100}%`; star.style.left = `${Math.random() * 100}%`;
-                star.style.animationDelay = `${Math.random() * 2}s`;
-                star.style.animationDuration = `${2 + Math.random() * 2}s`;
-                galaxyContainer.appendChild(star);
-            }
-        }
-        createGalaxy();
-        
-        const tools = [
-            { id: 'merge-pdf', name: 'Merge PDF', icon: 'fa-solid fa-object-ungroup' },
-            { id: 'split-pdf', name: 'Split PDF', icon: 'fa-solid fa-columns' },
-            { id: 'compress-pdf', name: 'Compress PDF', icon: 'fa-solid fa-file-zipper', info: 'Basic compression by re-encoding PDF structure.'},
-            { id: 'pdf-to-word', name: 'PDF to Word (Text)', icon: 'fa-solid fa-file-word', info: 'Extracts text only. Complex formatting is not preserved.' },
-            { id: 'word-to-pdf', name: 'Word to PDF', icon: 'fa-solid fa-file-pdf', accepts: '.docx', info: 'Converts .docx to a basic PDF.' },
-            { id: 'pdf-to-jpg', name: 'PDF to JPG', icon: 'fa-solid fa-file-image' },
-            { id: 'jpg-to-pdf', name: 'JPG to PDF', icon: 'fa-solid fa-file-image', accepts: '.jpg, .jpeg, .png', multiple: true },
-            { id: 'rotate-pdf', name: 'Rotate PDF', icon: 'fa-solid fa-sync-alt' },
-            { id: 'lock-pdf', name: 'Lock PDF', icon: 'fa-solid fa-lock' },
-            { id: 'unlock-pdf', name: 'Unlock PDF', icon: 'fa-solid fa-lock-open' },
-            { id: 'extract-pages', name: 'Extract Pages', icon: 'fa-solid fa-file-export' },
-            { id: 'add-watermark', name: 'Add Watermark', icon: 'fa-solid fa-copyright' },
-            { id: 'add-page-numbers', name: 'Add Page Numbers', icon: 'fa-solid fa-list-ol' },
+        // રીપોઝીટરીની ફાઇલોની યાદી
+        const pages = [
+            { name: "Home (Index)", file: "index.html" },
+            { name: "All-in-One Tools", file: "all-in-one-tools.html" },
+            { name: "Other Page", file: "other.html" }
         ];
-        tools.forEach(tool => { if (!tool.accepts) tool.accepts = '.pdf'; });
-        
-        tools.forEach(tool => {
-            const toolClickHandler = (e) => {
-                e.preventDefault();
-                currentTool = tool;
-                createToolPageUI(tool);
-            };
 
-            const dropdownButton = document.createElement('a');
-            dropdownButton.href = '#';
-            dropdownButton.innerHTML = `<i class="${tool.icon}"></i> ${tool.name}`;
-            dropdownButton.addEventListener('click', toolClickHandler);
-            toolsDropdownContainer.appendChild(dropdownButton);
+        const currentPage = window.location.pathname.split("/").pop() || "index.html";
 
-            const card = document.createElement('div');
-            card.className = 'tool-card';
-            card.innerHTML = `<i class="${tool.icon}"></i><h3>${tool.name}</h3>`;
-            card.addEventListener('click', toolClickHandler);
-            toolGrid.appendChild(card);
-        });
+        function renderButtons(pagesToDisplay) {
+            const container = document.getElementById("button-container");
+            container.innerHTML = "";
 
-        function showPage(pageId) {
-            pages.forEach(page => page.classList.toggle('hidden', page.id !== `page-${pageId}`));
-            window.scrollTo(0, 0);
-        }
-        pageLinks.forEach(link => link.addEventListener('click', (e) => { e.preventDefault(); showPage(link.getAttribute('data-page')); }));
-
-        function showNotification(message, type = 'success', duration = 4000) {
-            notification.textContent = message;
-            notification.className = `notification show ${type}`;
-            setTimeout(() => { notification.className = 'notification'; }, duration);
-        }
-        
-        function createToolPageUI(tool) {
-            let optionsHtml = '';
-            if (tool.info) optionsHtml += `<p style="margin-bottom:1rem;color:var(--light-text);"><i>Note: ${tool.info}</i></p>`;
-            switch (tool.id) {
-                case 'split-pdf': case 'extract-pages': optionsHtml += `<div class="tool-options"><label for="page-ranges">Page Ranges or Numbers (e.g., 1-3, 5):</label><input type="text" id="page-ranges" placeholder="1-3, 5, 8"></div>`; break;
-                case 'rotate-pdf': optionsHtml += `<div class="tool-options"><label for="rotation-angle">Rotation Angle:</label><select id="rotation-angle"><option value="90">90° Clockwise</option><option value="180">180°</option><option value="270">270° Clockwise</option></select></div>`; break;
-                case 'lock-pdf': case 'unlock-pdf': optionsHtml += `<div class="tool-options"><label for="pdf-password">${tool.id === 'lock-pdf' ? 'Set' : 'Enter'} Password:</label><input type="password" id="pdf-password" placeholder="Enter password"></div>`; break;
-                case 'add-watermark': optionsHtml += `<div class="tool-options"><label for="watermark-text">Watermark Text:</label><input type="text" id="watermark-text" placeholder="CONFIDENTIAL"></div>`; break;
-                case 'add-page-numbers': optionsHtml += `<div class="tool-options"><label for="page-number-position">Position:</label><select id="page-number-position"><option value="bottom-center">Bottom Center</option><option value="top-center">Top Center</option></select></div>`; break;
+            if (pagesToDisplay.length === 0) {
+                document.getElementById("no-result-msg").style.display = "block";
+                return;
+            } else {
+                document.getElementById("no-result-msg").style.display = "none";
             }
 
-            const toolDetailsHtml = `<div class="tool-details"><h3>How to ${tool.name}</h3><ul><li>Click 'Select File(s)' or drag your file(s) into the upload area.</li><li>${tool.multiple ? 'Select all the files you want to process.' : 'Select the file you want to process.'}</li><li>Configure any specific options for the tool if available.</li><li>Click the 'Process File(s)' button.</li><li>Preview your file and click 'Download' to save it.</li></ul><h3>Why Use Our ${tool.name} Tool?</h3><ul><li><strong>Completely Free:</strong> No hidden costs or sign-ups required.</li><li><strong>Maximum Privacy:</strong> Your files are processed in your browser and never sent to our servers.</li><li><strong>Fast & Efficient:</strong> Our tools are powered by high-performance libraries for quick results.</li></ul><h3>Frequently Asked Questions</h3><div class="faq-item"><strong>Is it safe to use this tool?</strong><p>Absolutely. Your privacy is our top priority. All operations happen on your computer, so your files are never uploaded. We have no access to your data.</p></div><div class="faq-item"><strong>Is there a file size limit?</strong><p>Since processing is done by your computer, the limit depends on your device's memory. Most modern computers can handle very large files without issues.</p></div></div>`;
-            const toolPageHtml = `<div class="tool-page" id="${tool.id}-page"><div class="tool-header"><button id="back-button"><i class="fas fa-arrow-left"></i> Home</button><h2>${tool.name}</h2></div><div id="tool-workspace"><div class="upload-area" id="upload-area"><input type="file" id="file-input" accept="${tool.accepts}" ${tool.multiple ? 'multiple' : ''} hidden><i class="fas fa-cloud-upload-alt" style="font-size: 3rem; color: var(--light-text); margin-bottom: 1rem;"></i><p>Drag & Drop file(s) here or</p><button class="upload-btn" id="upload-btn">Select File(s)</button><div id="file-list"></div></div>${optionsHtml}<button class="process-btn" id="process-btn" disabled>Process File(s)</button></div><div id="preview-area" class="hidden"></div>${toolDetailsHtml}</div>`;
-            document.getElementById('tool-page-container').innerHTML = toolPageHtml;
-            showPage('tool');
-
-            const backButton = document.getElementById('back-button'), uploadArea = document.getElementById('upload-area'), fileInput = document.getElementById('file-input'), uploadBtn = document.getElementById('upload-btn'), processBtn = document.getElementById('process-btn');
-            backButton.addEventListener('click', () => showPage('home'));
-            uploadBtn.addEventListener('click', () => fileInput.click());
-            processBtn.addEventListener('click', () => handleFileProcessing(tool.id));
-            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eName => uploadArea.addEventListener(eName, e => {e.preventDefault();e.stopPropagation();}, false));
-            ['dragenter', 'dragover'].forEach(eName => uploadArea.addEventListener(eName, () => uploadArea.classList.add('dragover'), false));
-            ['dragleave', 'drop'].forEach(eName => uploadArea.addEventListener(eName, () => uploadArea.classList.remove('dragover'), false));
-            uploadArea.addEventListener('drop', e => handleFileSelection(e.dataTransfer.files), false);
-            fileInput.addEventListener('change', () => handleFileSelection(fileInput.files));
-        }
-
-        function handleFileSelection(files) {
-            selectedFiles = Array.from(files);
-            const fileList = document.getElementById('file-list'), processBtn = document.getElementById('process-btn');
-            fileList.innerHTML = '';
-            if (selectedFiles.length > 0) {
-                selectedFiles.forEach(f => fileList.innerHTML += `<div class="file-item">${f.name}</div>`);
-                processBtn.disabled = false;
-            } else { processBtn.disabled = true; }
-        }
-        
-        async function handleFileProcessing(toolId) {
-            const processBtn = document.getElementById('process-btn');
-            if (!processBtn || selectedFiles.length === 0) return;
-            processBtn.disabled = true;
-            processBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
-            try {
-                let output, filename;
-                const tool = tools.find(t => t.id === toolId);
-                switch (toolId) {
-                    case 'merge-pdf': output = await mergePdfs(selectedFiles); filename = 'merged.pdf'; break;
-                    case 'split-pdf': case 'extract-pages': output = await splitPdf(selectedFiles[0], document.getElementById('page-ranges').value); filename = 'split.pdf'; break;
-                    case 'compress-pdf': output = await compressPdf(selectedFiles[0]); filename = 'compressed.pdf'; break;
-                    case 'pdf-to-word': output = await pdfToWord(selectedFiles[0]); filename = 'converted.txt'; break;
-                    case 'word-to-pdf': output = await wordToPdf(selectedFiles[0]); filename = 'converted.pdf'; break;
-                    case 'pdf-to-jpg': await pdfToJpg(selectedFiles[0]); return;
-                    case 'jpg-to-pdf': output = await jpgToPdf(selectedFiles); filename = 'converted.pdf'; break;
-                    case 'rotate-pdf': output = await rotatePdf(selectedFiles[0], parseInt(document.getElementById('rotation-angle').value)); filename = 'rotated.pdf'; break;
-                    case 'lock-pdf': case 'unlock-pdf': output = await modifyLock(selectedFiles[0], document.getElementById('pdf-password').value, toolId); filename = `${toolId === 'lock-pdf' ? 'locked' : 'unlocked'}.pdf`; break;
-                    case 'add-watermark': output = await addWatermark(selectedFiles[0], document.getElementById('watermark-text').value); filename = 'watermarked.pdf'; break;
-                    case 'add-page-numbers': output = await addPageNumbers(selectedFiles[0], document.getElementById('page-number-position').value); filename = 'paginated.pdf'; break;
-                }
+            pagesToDisplay.forEach(page => {
+                const btn = document.createElement("a");
+                btn.href = page.file;
+                btn.innerText = page.name;
+                btn.className = "nav-btn";
                 
-                if (output instanceof Uint8Array && filename.endsWith('.pdf')) {
-                    await generateAndShowPreview(output, filename);
-                    document.getElementById('tool-workspace').classList.add('hidden');
-                } else if (output) {
-                    const blob = new Blob([output], {type: "text/plain;charset=utf-8"});
-                    saveAs(blob, filename);
-                    showNotification('File processed and downloaded!');
-                    processBtn.disabled = false; processBtn.innerHTML = 'Process File(s)';
+                if (page.file === currentPage) {
+                    btn.style.backgroundColor = "#f59e0b"; // Active page highlight color
+                    btn.style.color = "#000";
+                    btn.title = "તમે હાલ આ પેજ પર છો";
                 }
-            } catch (error) {
-                console.error(error);
-                showNotification(error.message || 'An error occurred.', 'error');
-                processBtn.disabled = false; processBtn.innerHTML = 'Process File(s)';
-            }
+
+                container.appendChild(btn);
+            });
         }
 
-        async function generateAndShowPreview(pdfBytes, filename) {
-            const previewArea = document.getElementById('preview-area');
-            previewArea.classList.remove('hidden');
-            previewArea.innerHTML = `<h3>Preview & Download</h3><canvas id="preview-canvas"></canvas><div><button id="download-btn" class="process-btn download-btn">Download</button><button id="start-over-btn" class="process-btn start-over-btn">Start Over</button></div>`;
-            const canvas = document.getElementById('preview-canvas'), context = canvas.getContext('2d');
-            const pdf = await pdfjsLib.getDocument({ data: pdfBytes }).promise;
-            const page = await pdf.getPage(1);
-            const desiredWidth = 400, viewport = page.getViewport({ scale: 1 }), scale = desiredWidth / viewport.width, scaledViewport = page.getViewport({ scale });
-            canvas.height = scaledViewport.height; canvas.width = scaledViewport.width;
-            await page.render({ canvasContext: context, viewport: scaledViewport }).promise;
-            document.getElementById('download-btn').addEventListener('click', () => saveAs(new Blob([pdfBytes], { type: 'application/pdf' }), filename));
-            document.getElementById('start-over-btn').addEventListener('click', () => createToolPageUI(currentTool));
+        renderButtons(pages);
+
+        function filterPages() {
+            const query = document.getElementById("search-input").value.toLowerCase();
+            const filtered = pages.filter(p => p.name.toLowerCase().includes(query) || p.file.toLowerCase().includes(query));
+            renderButtons(filtered);
         }
 
-        async function mergePdfs(files) { const pdfDoc = await PDFDocument.create(); for (const file of files) { const pdf = await PDFDocument.load(await file.arrayBuffer()); const pages = await pdfDoc.copyPages(pdf, pdf.getPageIndices()); pages.forEach(p => pdfDoc.addPage(p)); } return pdfDoc.save(); }
-        async function splitPdf(file, rangesStr) { if (!rangesStr) throw new Error("Page ranges cannot be empty."); const pdfDoc = await PDFDocument.load(await file.arrayBuffer()), newPdf = await PDFDocument.create(), indices = new Set(); rangesStr.split(',').map(s=>s.trim()).forEach(r=>{if(r.includes('-')){const[s,e]=r.split('-').map(Number);for(let i=s;i<=e;i++)indices.add(i-1)}else indices.add(Number(r)-1)}); const pages=await newPdf.copyPages(pdfDoc, Array.from(indices).sort((a,b)=>a-b)); pages.forEach(p=>newPdf.addPage(p)); return newPdf.save(); }
-        async function compressPdf(file) { const pdfDoc = await PDFDocument.load(await file.arrayBuffer()); return pdfDoc.save({ useObjectStreams: true }); }
-        async function pdfToWord(file) { const pdf = await pdfjsLib.getDocument({data: await file.arrayBuffer()}).promise; let text = ''; for (let i=1; i<=pdf.numPages; i++){const page=await pdf.getPage(i);const content=await page.getTextContent();text+=content.items.map(s=>s.str).join(' ')+'\n\n'} return text; }
-        async function wordToPdf(file) { const {value:html}=await mammoth.convertToHtml({arrayBuffer:await file.arrayBuffer()}); const pdfDoc=await PDFDocument.create(), page=pdfDoc.addPage(); page.drawText(html.replace(/<[^>]*>/g,''),{x:50,y:750,font:await pdfDoc.embedFont(StandardFonts.Helvetica),size:12,maxWidth:500,lineHeight:15}); return pdfDoc.save(); }
-        async function pdfToJpg(file) { const pdf=await pdfjsLib.getDocument({data:await file.arrayBuffer()}).promise, zip=new JSZip(); showNotification('Converting... This may take a moment.','info'); for(let i=1;i<=pdf.numPages;i++){const page=await pdf.getPage(i),viewport=page.getViewport({scale:1.5}),canvas=document.createElement('canvas'),ctx=canvas.getContext('2d');canvas.height=viewport.height;canvas.width=viewport.width;await page.render({canvasContext:ctx,viewport}).promise;zip.file(`page_${i}.jpg`,canvas.toDataURL('image/jpeg').substr(23),{base64:true})} const content=await zip.generateAsync({type:"blob"}); saveAs(content, "converted_images.zip"); showNotification('Images saved in a ZIP file.'); document.getElementById('process-btn').disabled = false; document.getElementById('process-btn').innerHTML = 'Process File(s)'; }
-        async function jpgToPdf(files) { const pdfDoc=await PDFDocument.create(); for(const file of files){const bytes=await file.arrayBuffer(),img=file.type==='image/png'?await pdfDoc.embedPng(bytes):await pdfDoc.embedJpg(bytes);const page=pdfDoc.addPage([img.width,img.height]);page.drawImage(img,{x:0,y:0,width:img.width,height:img.height})} return pdfDoc.save(); }
-        async function rotatePdf(file, angle) { const pdfDoc=await PDFDocument.load(await file.arrayBuffer()); pdfDoc.getPages().forEach(p=>p.setRotation(degrees(angle))); return pdfDoc.save(); }
-        async function modifyLock(file, password, type) { if (!password) throw new Error("Password is required."); const options={userPassword:password}; if(type==='unlock-pdf')options.password=password; const pdfDoc=await PDFDocument.load(await file.arrayBuffer(),options); return pdfDoc.save(); }
-        async function addWatermark(file, text) { if(!text) throw new Error("Watermark text required."); const pdfDoc=await PDFDocument.load(await file.arrayBuffer()), font=await pdfDoc.embedFont(StandardFonts.HelveticaBold); pdfDoc.getPages().forEach(p=>{const{width,height}=p.getSize();p.drawText(text,{x:width/2-150,y:height/2,font,size:50,color:rgb(0.95,0.1,0.1),opacity:0.4,rotate:degrees(-45)})}); return pdfDoc.save(); }
-        async function addPageNumbers(file, position) { const pdfDoc=await PDFDocument.load(await file.arrayBuffer()), font=await pdfDoc.embedFont(StandardFonts.Helvetica), pages=pdfDoc.getPages(); for(let i=0;i<pages.length;i++){const p=pages[i],{width,height}=p.getSize(),y=position==='top-center'?height-40:20;p.drawText(`${i+1}/${pages.length}`,{x:width/2-10,y,font,size:12,color:rgb(0,0,0)})}; return pdfDoc.save(); }
-    });
+        // Previous & Next Navigation Setup
+        const currentIndex = pages.findIndex(p => p.file === currentPage);
+        const arrowContainer = document.getElementById("arrow-container");
+
+        const prevBtn = document.createElement("a");
+        prevBtn.innerText = "⬅ પાછળ";
+        prevBtn.className = "arrow-btn";
+        if (currentIndex > 0) {
+            prevBtn.href = pages[currentIndex - 1].file;
+        } else {
+            prevBtn.classList.add("disabled");
+        }
+        arrowContainer.appendChild(prevBtn);
+
+        const nextBtn = document.createElement("a");
+        nextBtn.innerText = "આગળ ➡";
+        nextBtn.className = "arrow-btn";
+        if (currentIndex !== -1 && currentIndex < pages.length - 1) {
+            nextBtn.href = pages[currentIndex + 1].file;
+        } else {
+            nextBtn.classList.add("disabled");
+        }
+        arrowContainer.appendChild(nextBtn);
+
+        }
     </script>
 </body>
 </html>
+```
