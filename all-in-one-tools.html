@@ -2,189 +2,219 @@
 <!DOCTYPE html>
 <html lang="gu">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Jgvfriendship all in one tools</title>
-<style>
-:root {
---primary-color: #4f46e5;
---primary-hover: #4338ca;
---bg-color: #f8fafc;
---card-bg: #ffffff;
---text-color: #1e293b;
---border-color: #e2e8f0;
-}
-​body {
-font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-background-color: var(--bg-color);
-color: var(--text-color);
-margin: 0;
-padding: 40px 10px;
-text-align: center;
-}
-​header h1 {
-color: var(--primary-color);
-margin-bottom: 5px;
-font-size: 1.8rem;
-}
-​header p {
-color: #64748b;
-margin-top: 0;
-font-size: 0.95rem;
-}
-​/* Navigation Container */
-.nav-section {
-background: var(--card-bg);
-max-width: 600px;
-margin: 30px auto;
-padding: 20px;
-border-radius: 12px;
-box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-border: 1px solid var(--border-color);
-}
-​.search-container {
-margin-bottom: 20px;
-}
-​#search-input {
-width: 100%;
-padding: 12px 18px;
-font-size: 15px;
-border: 2px solid var(--border-color);
-border-radius: 8px;
-outline: none;
-box-sizing: border-box;
-transition: 0.3s;
-}
-​#search-input:focus {
-border-color: var(--primary-color);
-box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
-}
-​#button-container {
-display: flex;
-justify-content: center;
-gap: 12px;
-flex-wrap: wrap;
-}
-​.nav-btn {
-background-color: var(--primary-color);
-color: white;
-border: none;
-padding: 10px 20px;
-font-size: 15px;
-border-radius: 8px;
-cursor: pointer;
-text-decoration: none;
-transition: 0.3s;
-box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-}
-​.nav-btn:hover {
-background-color: var(--primary-hover);
-transform: translateY(-1px);
-}
-​.no-result {
-color: #ef4444;
-font-style: italic;
-font-size: 0.95rem;
-margin-top: 15px;
-display: none;
-}
-​/* Arrow Navigation */
-.arrow-container {
-margin-top: 30px;
-display: flex;
-justify-content: center;
-gap: 15px;
-}
-​.arrow-btn {
-background-color: #3b82f6;
-color: white;
-padding: 10px 20px;
-font-size: 14px;
-border-radius: 8px;
-text-decoration: none;
-transition: 0.2s;
-box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-}
-​.arrow-btn:hover {
-background-color: #2563eb;
-}
-​.disabled {
-background-color: #cbd5e1;
-pointer-events: none;
-box-shadow: none;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jgvfriendship all in one tools</title>
+    <style>
+        :root {
+            --primary-color: #4f46e5;
+            --primary-hover: #4338ca;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #1e293b;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 40px 10px;
+            text-align: center;
+        }
+
+        header h1 {
+            color: var(--primary-color);
+            margin-bottom: 5px;
+            font-size: 1.8rem;
+        }
+
+        header p {
+            color: #64748b;
+            margin-top: 0;
+            font-size: 0.95rem;
+        }
+
+        /* Navigation Container */
+        .nav-section {
+            background: var(--card-bg);
+            max-width: 600px;
+            margin: 30px auto;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border-color);
+        }
+
+        .search-container {
+            margin-bottom: 20px;
+        }
+
+        #search-input {
+            width: 100%;
+            padding: 12px 18px;
+            font-size: 15px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            outline: none;
+            box-sizing: border-box;
+            transition: 0.3s;
+        }
+
+        #search-input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+        }
+
+        #button-container {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .nav-btn:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        .no-result {
+            color: #ef4444;
+            font-style: italic;
+            font-size: 0.95rem;
+            margin-top: 15px;
+            display: none;
+        }
+
+        /* Arrow Navigation */
+        .arrow-container {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .arrow-btn {
+            background-color: #3b82f6;
+            color: white;
+            padding: 10px 20px;
+            font-size: 14px;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: 0.2s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .arrow-btn:hover {
+            background-color: #2563eb;
+        }
+
+        .disabled {
+            background-color: #cbd5e1;
+            pointer-events: none;
+            box-shadow: none;
+        }
+    </style>
 </head>
 <body>
-​<header>
-<h1>Jgvfriendship all in one tools</h1>
-<p> 📖FREE LIFE TOOLS 📚</p>
-</header>
-​<div class="nav-section">
-<div class="search-container">
-<input type="text" id="search-input" placeholder="🔍 ફાઇલ શોધો..." onkeyup="filterPages()">
-<div id="no-result-msg" class="no-result">કોઈ પેજ મળ્યું નથી!</div>
-</div>
-<div id="button-container"></div>
-</div>
-​<div class="arrow-container" id="arrow-container"></div>
-​<script>
-// ફાઇલોની યાદી
-const pages = [
-{ name: "Home (Index)", file: "index.html" },
-{ name: "All-in-One Tools", file: "all-in-one-tools.html" },
-{ name: "Other Page", file: "other.html" }
-];
-​const currentPage = window.location.pathname.split("/").pop() || "index.html";
-​function renderButtons(pagesToDisplay) {
-const container = document.getElementById("button-container");
-container.innerHTML = "";
-​if (pagesToDisplay.length === 0) {
-document.getElementById("no-result-msg").style.display = "block";
-return;
-} else {
-document.getElementById("no-result-msg").style.display = "none";
-}
-​pagesToDisplay.forEach(page => {
-const btn = document.createElement("a");
-btn.href = page.file;
-btn.innerText = page.name;
-btn.className = "nav-btn";
-​if (page.file === currentPage) {
-btn.style.backgroundColor = "#f59e0b"; // Active page highlight color
-btn.style.color = "#000";
-btn.title = "તમે હાલ આ પેજ પર છો";
-}
-​container.appendChild(btn);
-});
-}
-​renderButtons(pages);
-​function filterPages() {
-const query = document.getElementById("search-input").value.toLowerCase();
-const filtered = pages.filter(p => p.name.toLowerCase().includes(query) || p.file.toLowerCase().includes(query));
-renderButtons(filtered);
-}
-​// Previous & Next Navigation Setup
-const currentIndex = pages.findIndex(p => p.file === currentPage);
-const arrowContainer = document.getElementById("arrow-container");
-​const prevBtn = document.createElement("a");
-prevBtn.innerText = "⬅ પાછળ";
-prevBtn.className = "arrow-btn";
-if (currentIndex > 0) {
-prevBtn.href = pages[currentIndex - 1].file;
-} else {
-prevBtn.classList.add("disabled");
-}
-arrowContainer.appendChild(prevBtn);
-​const nextBtn = document.createElement("a");
-nextBtn.innerText = "આગળ ➡";
-nextBtn.className = "arrow-btn";
-if (currentIndex !== -1 && currentIndex < pages.length - 1) {
-nextBtn.href = pages[currentIndex + 1].file;
-} else {
-nextBtn.classList.add("disabled");
-}
-arrowContainer.appendChild(nextBtn);
-</script>
+
+    <header>
+        <h1>Jgvfriendship all in one tools</h1>
+        <p>📖 FREE LIFE TOOLS 📚</p>
+    </header>
+
+    <div class="nav-section">
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="🔍 ફાઇલ શોધો..." onkeyup="filterPages()">
+            <div id="no-result-msg" class="no-result">કોઈ પેજ મળ્યું નથી!</div>
+        </div>
+        <div id="button-container"></div>
+    </div>
+
+    <div class="arrow-container" id="arrow-container"></div>
+
+    <script>
+        // રીપોઝીટરીની ફાઇલોની યાદી
+        const pages = [
+            { name: "Home (Index)", file: "index.html" },
+            { name: "All-in-One Tools", file: "all-in-one-tools.html" },
+            { name: "Other Page", file: "other.html" }
+        ];
+
+        const currentPage = window.location.pathname.split("/").pop() || "index.html";
+
+        function renderButtons(pagesToDisplay) {
+            const container = document.getElementById("button-container");
+            container.innerHTML = "";
+
+            if (pagesToDisplay.length === 0) {
+                document.getElementById("no-result-msg").style.display = "block";
+                return;
+            } else {
+                document.getElementById("no-result-msg").style.display = "none";
+            }
+
+            pagesToDisplay.forEach(page => {
+                const btn = document.createElement("a");
+                btn.href = page.file;
+                btn.innerText = page.name;
+                btn.className = "nav-btn";
+                
+                if (page.file === currentPage) {
+                    btn.style.backgroundColor = "#f59e0b"; // Active page highlight color
+                    btn.style.color = "#000";
+                    btn.title = "તમે હાલ આ પેજ પર છો";
+                }
+
+                container.appendChild(btn);
+            });
+        }
+
+        renderButtons(pages);
+
+        function filterPages() {
+            const query = document.getElementById("search-input").value.toLowerCase();
+            const filtered = pages.filter(p => p.name.toLowerCase().includes(query) || p.file.toLowerCase().includes(query));
+            renderButtons(filtered);
+        }
+
+        // Previous & Next Navigation Setup
+        const currentIndex = pages.findIndex(p => p.file === currentPage);
+        const arrowContainer = document.getElementById("arrow-container");
+
+        const prevBtn = document.createElement("a");
+        prevBtn.innerText = "⬅ પાછળ";
+        prevBtn.className = "arrow-btn";
+        if (currentIndex > 0) {
+            prevBtn.href = pages[currentIndex - 1].file;
+        } else {
+            prevBtn.classList.add("disabled");
+        }
+        arrowContainer.appendChild(prevBtn);
+
+        const nextBtn = document.createElement("a");
+        nextBtn.innerText = "આગળ ➡";
+        nextBtn.className = "arrow-btn";
+        if (currentIndex !== -1 && currentIndex < pages.length - 1) {
+            nextBtn.href = pages[currentIndex + 1].file;
+        } else {
+            nextBtn.classList.add("disabled");
+        }
+        arrowContainer.appendChild(nextBtn);
+    </script>
 </body>
 </html>
