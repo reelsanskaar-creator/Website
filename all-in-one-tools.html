@@ -1,4 +1,4 @@
-
+```html
 <!DOCTYPE html>
 <html lang="gu">
 <head>
@@ -6,45 +6,60 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jgvfriendship all in one tools</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
         :root {
-            --primary-color: #4f46e5;
-            --primary-hover: #4338ca;
-            --bg-color: #f8fafc;
-            --card-bg: #ffffff;
-            --text-color: #1e293b;
-            --border-color: #e2e8f0;
+            --bg-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --text-color: #1f2937;
+            --primary-color: #6366f1;
+            --primary-hover: #4f46e5;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-gradient);
+            background-attachment: fixed;
             color: var(--text-color);
             margin: 0;
-            padding: 40px 10px;
+            padding: 30px 15px;
             text-align: center;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
 
         header h1 {
-            color: var(--primary-color);
+            color: #ffffff;
             margin-bottom: 5px;
-            font-size: 1.8rem;
+            font-size: 2.2rem;
+            text-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            animation: fadeInDown 0.8s ease-in-out;
         }
 
         header p {
-            color: #64748b;
+            color: #f3f4f6;
             margin-top: 0;
-            font-size: 0.95rem;
+            font-size: 1.05rem;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            animation: fadeInUp 0.8s ease-in-out;
         }
 
-        /* Navigation Container */
+        /* Glassmorphism Navigation Container */
         .nav-section {
             background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            width: 100%;
             max-width: 600px;
-            margin: 30px auto;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-            border: 1px solid var(--border-color);
+            margin: 25px auto;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            animation: zoomIn 0.6s ease-in-out;
+            box-sizing: border-box;
         }
 
         .search-container {
@@ -53,18 +68,20 @@
 
         #search-input {
             width: 100%;
-            padding: 12px 18px;
-            font-size: 15px;
-            border: 2px solid var(--border-color);
-            border-radius: 8px;
+            padding: 14px 20px;
+            font-size: 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
             outline: none;
             box-sizing: border-box;
-            transition: 0.3s;
+            transition: all 0.3s ease;
+            background: #ffffff;
         }
 
         #search-input:focus {
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.3);
+            transform: scale(1.01);
         }
 
         #button-container {
@@ -74,22 +91,41 @@
             flex-wrap: wrap;
         }
 
+        /* Animated Colorful Buttons */
         .nav-btn {
-            background-color: var(--primary-color);
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
             color: white;
             border: none;
-            padding: 10px 20px;
+            padding: 12px 22px;
             font-size: 15px;
-            border-radius: 8px;
+            font-weight: 600;
+            border-radius: 12px;
             cursor: pointer;
             text-decoration: none;
-            transition: 0.3s;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: 0.5s;
+        }
+
+        .nav-btn:hover::before {
+            left: 100%;
         }
 
         .nav-btn:hover {
-            background-color: var(--primary-hover);
-            transform: translateY(-1px);
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(79, 70, 229, 0.5);
         }
 
         .no-result {
@@ -100,33 +136,59 @@
             display: none;
         }
 
-        /* Arrow Navigation */
+        /* Arrow Navigation Animation */
         .arrow-container {
-            margin-top: 30px;
+            margin-top: 25px;
             display: flex;
             justify-content: center;
             gap: 15px;
+            animation: fadeIn 1s ease-in-out;
         }
 
         .arrow-btn {
-            background-color: #3b82f6;
+            background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
             color: white;
-            padding: 10px 20px;
-            font-size: 14px;
-            border-radius: 8px;
+            padding: 12px 24px;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 12px;
             text-decoration: none;
-            transition: 0.2s;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3);
         }
 
         .arrow-btn:hover {
-            background-color: #2563eb;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(6, 182, 212, 0.5);
         }
 
         .disabled {
-            background-color: #cbd5e1;
+            background: #cbd5e1 !important;
+            color: #94a3b8 !important;
             pointer-events: none;
-            box-shadow: none;
+            box-shadow: none !important;
+            transform: none !important;
+        }
+
+        /* Animations Keyframes */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes zoomIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
     </style>
 </head>
@@ -134,12 +196,12 @@
 
     <header>
         <h1>Jgvfriendship all in one tools</h1>
-        <p>📖 FREE LIFE TOOLS 📚</p>
+        <p>✨ 📖 FREE LIFE TOOLS & GAMES 📚 ✨</p>
     </header>
 
     <div class="nav-section">
         <div class="search-container">
-            <input type="text" id="search-input" placeholder="🔍 ફાઇલ શોધો..." onkeyup="filterPages()">
+            <input type="text" id="search-input" placeholder="🔍 ફાઇલ શોધો (Search)..." onkeyup="filterPages()">
             <div id="no-result-msg" class="no-result">કોઈ પેજ મળ્યું નથી!</div>
         </div>
         <div id="button-container"></div>
@@ -148,10 +210,11 @@
     <div class="arrow-container" id="arrow-container"></div>
 
     <script>
-        // રીપોઝીટરીની ફાઇલોની યાદી
+        // રીપોઝીટરીની ફાઇલોની યાદી (તમે અહીં kids-game.html પણ ઉમેરી શકો છો)
         const pages = [
-            { name: "Home (Index)", file: "index.html" },
+            { name: "Home ", file: "index.html" },
             { name: "All-in-One Tools", file: "all-in-one-tools.html" },
+            { name: "Kids Game 🎮", file: "kids-game.html" },
             { name: "Other Page", file: "other.html" }
         ];
 
@@ -175,8 +238,9 @@
                 btn.className = "nav-btn";
                 
                 if (page.file === currentPage) {
-                    btn.style.backgroundColor = "#f59e0b"; // Active page highlight color
-                    btn.style.color = "#000";
+                    btn.style.background = "linear-gradient(135deg, #f59e0b 0%, #d97706 100%)"; // Active page highlight color
+                    btn.style.color = "#ffffff";
+                    btn.style.boxShadow = "0 4px 15px rgba(245, 158, 11, 0.4)";
                     btn.title = "તમે હાલ આ પેજ પર છો";
                 }
 
@@ -218,3 +282,4 @@
     </script>
 </body>
 </html>
+```
